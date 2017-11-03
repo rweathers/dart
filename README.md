@@ -26,6 +26,14 @@ Download the appropriate file for your platform for the latest [release](release
 * dart_X.X.X_script.zip - Python script
 * dart_X.X.X_windows.msi - Installer for Windows systems
 
+## Dependencies
+
+For Debian and script installations you will need:
+
+ * Python 3
+ * Tk
+ * [Hydra](https://github.com/rweathers/Hydra)
+
 ## Usage
 
 See ```dart --help``` or the Help menu for more information.
