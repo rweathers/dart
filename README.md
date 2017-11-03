@@ -1,6 +1,6 @@
 # dart
 
-dart is a tool for analyzing and manipulating delimited data files. It can be run in either CLI or GUI mode, and can preform the following actions:
+dart is a tool for analyzing and manipulating delimited data files. It can be run in either CLI or GUI mode, and can perform the following actions:
 
  * Analyze - analyze a file and output a summary of its contents
  * Combine - combine multiple files and append original filename
