@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Product Id="*" UpgradeCode="aad3d48a-fd0b-46b5-ab3d-2035b670ac7d" Name="dart" Version="0.2.0" Manufacturer="Ryan Weathers" Language="1033">
+		<Package InstallerVersion="200" Compressed="yes" Comments="Windows Installer Package"/>
+		<Media Id="1" Cabinet="product.cab" EmbedCab="yes"/>
+		<UIRef Id="WixUI_Minimal"/>
+		<WixVariable Id="WixUILicenseRtf" Value="license.rtf"/>
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed."/>
+		<Directory Id="TARGETDIR" Name="SourceDir" >
+			<Directory Id="ProgramFilesFolder">
+				<Directory Id="INSTALLDIR" Name="dart">
+					<Component Id="ApplicationFile1" Guid="db4b08d3-3188-4c3f-ad00-26117d40a2d5"><File Id="ApplicationFile1" Source="../exe/dart-gui.exe"/></Component>
+					<Component Id="ApplicationFile2" Guid="0d700712-9d96-4f71-b3cf-02cbeb97e81f"><File Id="ApplicationFile2" Source="../exe/dart.exe"/></Component>
+					<Component Id="ApplicationFile3" Guid="8054e208-51c2-47ac-889a-57f15bdae8aa"><File Id="ApplicationFile3" Source="../../source/dart.template.ini" Name="dart.ini"/></Component>
+				</Directory>
+			</Directory>
+			<Directory Id="ProgramMenuFolder">
+				<Directory Id="ProgramMenuSubfolder" Name="dart">
+					<Component Id="ApplicationShortcuts" Guid="d27f0245-7ee5-46a1-8302-0d7591518441">
+						<Shortcut Id="ApplicationShortcut1" Name="dart" Description="dart" Target="[INSTALLDIR]dart-gui.exe" WorkingDirectory="INSTALLDIR"/>
+						<RegistryValue Root="HKCU" Key="Software\dart" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+						<RemoveFolder Id="ProgramMenuSubfolder" On="uninstall"/>
+					</Component>
+				</Directory>
+			</Directory>
+			<Component Id="SetEnviroment" Guid="d9369635-36b8-4312-bbd7-2659104485e3">
+				<Environment Id="PATH" Name="PATH" Value="[INSTALLDIR]" Permanent="no" Part="last" Action="set" System="yes"/>
+			</Component>
+		</Directory>
+		<Feature Id="DefaultFeature" Level="1">
+			<ComponentRef Id="ApplicationFile1"/>
+			<ComponentRef Id="ApplicationFile2"/>
+			<ComponentRef Id="ApplicationFile3"/>
+			<ComponentRef Id="ApplicationShortcuts"/>
+			<ComponentRef Id="SetEnviroment"/>
+		</Feature>
+	</Product>
+</Wix>

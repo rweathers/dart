@@ -1,0 +1,9 @@
+Package: dart
+Version: 0.2.0~beta
+Section: misc
+Priority: optional
+Architecture: all
+Depends: python3
+Maintainer: Ryan Weathers <ryanweathers63@gmail.com>
+Description: Analyze and manipulate delimited data files.
+ This tool allows you to analyze and manipulate delimited data files.

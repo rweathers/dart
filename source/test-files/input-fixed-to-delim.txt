@@ -1,0 +1,27 @@
+Name      Text 1         Text 2              Text 3              Number  Currency  BlankArabicChineseCryillic
+Alice     Sample text.   Text with "quotes". Text, with a comma. 12345.00$12,345.00     ݜ     㑻㑱㒜    ЀЃЊЖ    
+Bob       Sample text.   Text with "quotes". Text, with a comma. 12345.00$12,345.00     ݜ     㑻㑱㒜    ЀЃЊЖ    
+Carrie    Sample text.   Text with "quotes". Text, with a comma. 12345.00$12,345.00     ݜ     㑻㑱㒜    ЀЃЊЖ    
+David     Sample text.   Text with "quotes". Text, with a comma. 12345.00$12,345.00     ݜ     㑻㑱㒜    ЀЃЊЖ    
+Erin      Sample text.   Text with "quotes". Text, with a comma. 12345.00$12,345.00     ݜ     㑻㑱㒜    ЀЃЊЖ    
+Frank     Sample text.   Text with "quotes". Text, with a comma. 12345.00$12,345.00     ݜ     㑻㑱㒜    ЀЃЊЖ    
+Grace     Sample text.   Text with "quotes". Text, with a comma. 12345.00$12,345.00     ݜ     㑻㑱㒜    ЀЃЊЖ    
+Harry     Sample text.   Text with "quotes". Text, with a comma. 12345.00$12,345.00     ݜ     㑻㑱㒜    ЀЃЊЖ    
+Ivy       Sample text.   Text with "quotes". Text, with a comma. 12345.00$12,345.00     ݜ     㑻㑱㒜    ЀЃЊЖ    
+Jake      Sample text.   Text with "quotes". Text, with a comma. 12345.00$12,345.00     ݜ     㑻㑱㒜    ЀЃЊЖ    
+Kate      Sample text.   Text with "quotes". Text, with a comma. 12345.00$12,345.00     ݜ     㑻㑱㒜    ЀЃЊЖ    
+Larry     Sample text.   Text with "quotes". Text, with a comma. 12345.00$12,345.00     ݜ     㑻㑱㒜    ЀЃЊЖ    
+Monica    Sample text.   Text with "quotes". Text, with a comma. 12345.00$12,345.00     ݜ     㑻㑱㒜    ЀЃЊЖ    
+Ned       Sample text.   Text with "quotes". Text, with a comma. 12345.00$12,345.00     ݜ     㑻㑱㒜    ЀЃЊЖ    
+Oliva     Sample text.   Text with "quotes". Text, with a comma. 12345.00$12,345.00     ݜ     㑻㑱㒜    ЀЃЊЖ    
+Peter     Sample text.   Text with "quotes". Text, with a comma. 12345.00$12,345.00     ݜ     㑻㑱㒜    ЀЃЊЖ    
+Quinn     Sample text.   Text with "quotes". Text, with a comma. 12345.00$12,345.00     ݜ     㑻㑱㒜    ЀЃЊЖ    
+Roger     Sample text.   Text with "quotes". Text, with a comma. 12345.00$12,345.00     ݜ     㑻㑱㒜    ЀЃЊЖ    
+Sarah     Sample text.   Text with "quotes". Text, with a comma. 12345.00$12,345.00     ݜ     㑻㑱㒜    ЀЃЊЖ    
+Travis    Sample text.   Text with "quotes". Text, with a comma. 12345.00$12,345.00     ݜ     㑻㑱㒜    ЀЃЊЖ    
+Ursula    Sample text.   Text with "quotes". Text, with a comma. 12345.00$12,345.00     ݜ     㑻㑱㒜    ЀЃЊЖ    
+Victor    Sample text.   Text with "quotes". Text, with a comma. 12345.00$12,345.00     ݜ     㑻㑱㒜    ЀЃЊЖ    
+Wendy     Sample text.   Text with "quotes". Text, with a comma. 12345.00$12,345.00     ݜ     㑻㑱㒜    ЀЃЊЖ    
+Xander    Sample text.   Text with "quotes". Text, with a comma. 12345.00$12,345.00     ݜ     㑻㑱㒜    ЀЃЊЖ    
+Yasmine   Sample text.   Text with "quotes". Text, with a comma. 12345.00$12,345.00     ݜ     㑻㑱㒜    ЀЃЊЖ    
+Zachary   Sample text.   Text with "quotes". Text, with a comma. 12345.00$12,345.00     ݜ     㑻㑱㒜    ЀЃЊЖ    

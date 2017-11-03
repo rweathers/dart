@@ -1,0 +1,13 @@
+/build/deb/dart.deb
+/build/exe/dart.exe
+/build/exe/dart-gui.exe
+/build/msi/dart.msi
+/build/resources/base64.txt
+
+/source/dart.ini
+/source/dart.err
+/source/dart/__pycache__
+
+/source/test-files/output*
+/source/test-files/split-lines-*.csv
+/source/test-files/split-value-*.csv

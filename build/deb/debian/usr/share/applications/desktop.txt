@@ -1,0 +1,11 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=dart
+Comment=Analyze and manipulate delimited data files.
+Exec=/usr/bin/dart gui
+Icon=/usr/share/doc/dart/dart.png
+Terminal=false
+Type=Application
+Categories=Utility;
+StartupNotify=true
+Version=1.0
