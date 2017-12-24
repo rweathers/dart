@@ -40,9 +40,8 @@ class Action(BaseAction):
 		if self.inputs["action"] in ["filter", "replace-pattern", "replace-value", "split-value"]:
 			try:
 				self.inputs["column"] = int(self.inputs["column"])
-				self.column_valid = True
 			except ValueError as e:
-				self.column_valid = False
+				pass
 			
 		# Convert columns to a list of ints
 		if self.inputs["action"] in ["remove-columns"]:
@@ -60,18 +59,16 @@ class Action(BaseAction):
 						else:
 							self.inputs["columns"].append(int(columns[i]))
 					self.inputs["columns"].sort(reverse=True)
-				self.columns_valid = True
 			except ValueError as e:
-				self.columns_valid = False
+				self.inputs["columns"] = None
 			
 		# Convert lines to int
 		if self.inputs["action"] in ["analyze", "head", "split-lines", "sql-import"]:
 			if (self.inputs["action"] in ["analyze", "sql-import"]) and (self.inputs["lines"] == ""): self.inputs["lines"] = 0
 			try:
 				self.inputs["lines"] = int(self.inputs["lines"])
-				self.lines_valid = True
 			except ValueError as e:
-				self.lines_valid = False
+				pass
 		
 		# Convert wildcards to a list of filenames
 		self.expand("input")
@@ -89,15 +86,15 @@ class Action(BaseAction):
 		# Validate column
 		if self.inputs["action"] in ["filter", "replace-pattern", "replace-value", "split-value"]:
 			try:
-				if not self.column_valid: raise Exception()
-				if self.inputs["column"] < 0:raise Exception()
+				if not isinstance(self.inputs["column"], int): raise Exception()
+				if self.inputs["column"] < 0: raise Exception()
 			except Exception as e:
 				message += "column must be an non-negative integer\n"
 			
 		# Validate columns
 		if self.inputs["action"] in ["remove-columns"]:
 			try:
-				if not self.columns_valid: raise Exception()
+				if self.inputs["columns"] is None: raise Exception()
 				for i in self.inputs["columns"]:
 					if i < 0: raise Exception()
 			except Exception as e:
@@ -106,13 +103,13 @@ class Action(BaseAction):
 		# Validate lines
 		if self.inputs["action"] in ["analyze", "sql-import"]:
 			try:
-				if not self.lines_valid: raise Exception()
+				if not isinstance(self.inputs["lines"], int): raise Exception()
 				if self.inputs["lines"] < 0: raise Exception()
 			except Exception as e:
 				message += "if supplied, lines must be a non-negative integer\n"
 		elif self.inputs["action"] in ["head", "split-lines"]:
 			try:
-				if not self.lines_valid: raise Exception()
+				if not isinstance(self.inputs["lines"], int): raise Exception()
 				if self.inputs["lines"] <= 0: raise Exception()
 			except Exception as e:
 				message += "lines must be a positive integer\n"
