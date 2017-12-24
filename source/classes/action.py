@@ -25,6 +25,7 @@ import sys
 import time
 from datetime import datetime
 from hydra import BaseAction
+from classes.data_reader import DataReader
 
 # ===========================================================================================================================
 # Class to validate the user's inputs and do the actual work
@@ -884,27 +885,3 @@ class SplitAction(Action):
 			f += 1
 		
 		return "Processed " + str(i) + " records sucessfully"
-
-# ===========================================================================================================================
-# Iterator for files that removes line endings and skips blank lines
-class DataReader:
-	# -----------------------------------------------------------------------------------------------------------------------
-	# Initializes the object
-	def __init__(self, f):
-		self.f = f
-	
-	# -----------------------------------------------------------------------------------------------------------------------
-	# Makes the class an iterator
-	def __iter__(self):
-		return self
-	
-	# -----------------------------------------------------------------------------------------------------------------------
-	# Returns the next non-blank line
-	def __next__(self):
-		while True:
-			line = self.f.readline()
-			if line == "":
-				raise StopIteration()
-			else:
-				line = line.strip("\r\n")
-				if line != "": return line
