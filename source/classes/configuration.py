@@ -20,7 +20,6 @@
 
 import os
 from hydra import BaseConfiguration
-from hydra import localize_dir
 
 # ===========================================================================================================================
 # Class to validate the config file
@@ -31,8 +30,6 @@ class Configuration(BaseConfiguration):
 		errors = ""
 		
 		start_folder = self.conf.get("start-folder", "")
-		if start_folder != "":
-			start_folder = localize_dir(start_folder)
-			if not os.path.isdir(start_folder): errors += start_folder +" is not a valid directory\n"
-				
+		if (start_folder != "") and not os.path.isdir(os.path.normpath(start_folder)): errors += start_folder +" is not a valid directory\n"
+		
 		if errors != "": raise Exception("The following errors occurred when parsing " + self.filename + "\n\n" + errors)
