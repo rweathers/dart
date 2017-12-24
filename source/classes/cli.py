@@ -20,10 +20,10 @@
 
 import sys
 from hydra import BaseCLI
-from dart.action import AnalyzeAction
-from dart.action import BasicAction
-from dart.action import FixedAction
-from dart.action import SplitAction
+from classes.action import AnalyzeAction
+from classes.action import BasicAction
+from classes.action import FixedAction
+from classes.action import SplitAction
 
 # ===========================================================================================================================
 # Class to define the command line interface

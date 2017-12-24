@@ -22,9 +22,9 @@
 #############################################################################################################################
 
 from hydra import main
-from dart.configuration import Configuration
-from dart.cli import CLI
-from dart.gui import GUI
+from classes.configuration import Configuration
+from classes.cli import CLI
+from classes.gui import GUI
 
 program = {
 	"name"     :"dart",
