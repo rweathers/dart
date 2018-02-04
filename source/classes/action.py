@@ -589,7 +589,7 @@ class AnalyzeAction(Action):
 						s = s.replace("\n", "\\n")
 						return s
 					parts = [table_name, ",\n".join(columns), escape(os.path.abspath(input_filename)), table_name, escape(self.inputs["delim"]), escape(self.inputs["enclose"]), escape(os.linesep), " IGNORE 1 LINES" if self.inputs["headers"] else ""]
-					results = "CREATE TABLE {}(\n{}\n);\n\nLOAD DATA INFILE '{}' INTO TABLE {} FIELDS TERMINATED BY '{}' OPTIONALLY ENCLOSED BY '{}' LINES TERMINATED BY '{}'{};\n".format(*parts)
+					results = "CREATE TABLE {}(\n{}\n);\n\nLOAD DATA INFILE '{}' IGNORE INTO TABLE {} FIELDS TERMINATED BY '{}' OPTIONALLY ENCLOSED BY '{}' LINES TERMINATED BY '{}'{};\n".format(*parts)
 				else:
 					raise Exception("Unknown action: " + self.inputs["action"])
 			else:
