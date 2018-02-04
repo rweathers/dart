@@ -3,7 +3,7 @@
 #############################################################################################################################
 # dart - Analyze and manipulate delimited data files
 #
-# Copyright © 2017 Ryan Weathers, All Rights Reserved.
+# Copyright © 2017, 2018 Ryan Weathers, All Rights Reserved.
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# Version: 0.2.0-beta (2017.11.02)
+# Version: 0.3.0-beta (2018.02.04)
 #############################################################################################################################
 
 from hydra import main
@@ -28,8 +28,8 @@ from classes.gui import GUI
 
 program = {
 	"name"     :"dart",
-	"version"  :"0.2.0-beta",
-	"date"     :"11/02/2017",
+	"version"  :"0.3.0-beta",
+	"date"     :"02/04/2018",
 	"usage"    :"dart --action action [-options] -i input(s) [-o output]",
 	"purpose"  :"Analyze and manipulate delimited data files.",
 	"url"      :"https://github.com/rweathers/dart",
