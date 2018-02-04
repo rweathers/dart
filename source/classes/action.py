@@ -562,8 +562,6 @@ class AnalyzeAction(Action):
 								datatype = "DATETIME"
 						elif (field["time"]) and ((field["time-format"] == "%H:%M") or (field["time-format"] == "%H:%M:%S")):
 							datatype = "TIME"
-						elif field["boolean"]:
-							datatype = "TINYINT"
 						elif (field["length-min"] > 0) and (field["length-min"] == field["length-max"]):
 							datatype = "CHAR({})".format(field["length-min"])
 						elif field["integer"]:
