@@ -22,6 +22,8 @@
 ./dart.py --action analyze    --input test-files/input-analyze.csv    --output test-files/output-analyze.csv    --headers
 ./dart.py --action sql-import --input test-files/input-sql-import.csv --output test-files/output-sql-import.sql --headers
 
+./dart.py --action repair --input test-files/input-tab-delim.txt  --output test-files/output-tab-delim.txt --headers --delim '\t' --enclose ''
+
 echo "foobar" | ./dart.py --action repair --quiet
 
 ./dart.py

@@ -194,6 +194,7 @@ class Action(BaseAction):
 	# Unparses a list into a delimited string
 	def unparse_data(self, record, delim=",", enclose="\"", escape="\""):
 		ret = []
+		if enclose == "": escape = ""
 		for r in record: ret.append(enclose + str(r).replace(enclose, escape + enclose) + enclose)
 		return delim.join(ret)
 
