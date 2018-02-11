@@ -18,7 +18,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# Version: 0.3.0-beta (2018.02.04)
+# Version: 0.3.1-beta (2018.02.11)
 #############################################################################################################################
 
 from hydra import main
@@ -28,12 +28,12 @@ from classes.gui import GUI
 
 program = {
 	"name"     :"dart",
-	"version"  :"0.3.0-beta",
-	"date"     :"02/04/2018",
+	"version"  :"0.3.1-beta",
+	"date"     :"02/11/2018",
 	"usage"    :"dart --action action [-options] -i input(s) [-o output]",
 	"purpose"  :"Analyze and manipulate delimited data files.",
 	"url"      :"https://github.com/rweathers/dart",
-	"copyright":"Copyright © 2017 Ryan Weathers, All Rights Reserved.",
+	"copyright":"Copyright © 2017, 2018 Ryan Weathers, All Rights Reserved.",
 	"license"  :"This program is free software: you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\nGNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License\nalong with this program.  If not, see <http://www.gnu.org/licenses/>.",
 	"config"   :"{path}dart.ini",
 	"error"    :"{path}dart.err",

@@ -7,3 +7,7 @@ Initial release.
 ## 0.3.0-beta (2018.02.04)
 
 Removed boolean data type and added IGNORE keyword for SQL Import.
+
+## 0.3.1-beta (2018.02.11)
+
+Fixed handling of tab delimited files.
