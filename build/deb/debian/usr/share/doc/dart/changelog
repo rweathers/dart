@@ -1,3 +1,9 @@
+dart (0.4.0-beta) stable; urgency=low
+  * Removed Uncombine action.
+  * Removed original filename from Combine.
+  * Removed unnecessary parsing and unparsing of data.
+ -- Ryan Weathers <ryanweathers63@gmail.com>  Sun, 09 Sep 2018 11:00:00 -0400
+
 dart (0.3.1-beta) stable; urgency=low
   * Fixed handling of tab delimited files
  -- Ryan Weathers <ryanweathers63@gmail.com>  Sun, 11 Feb 2018 11:00:00 -0500
