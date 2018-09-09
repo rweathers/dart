@@ -17,8 +17,6 @@
 ./dart.py --action split-lines --input test-files/split-lines.csv --headers --lines 10
 ./dart.py --action split-value --input test-files/split-value.csv --headers --column 10
 
-./dart.py --action uncombine --input test-files/input-uncombine.csv --headers
-
 ./dart.py --action analyze    --input test-files/input-analyze.csv    --output test-files/output-analyze.csv    --headers
 ./dart.py --action sql-import --input test-files/input-sql-import.csv --output test-files/output-sql-import.sql --headers
 

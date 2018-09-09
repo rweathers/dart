@@ -62,7 +62,6 @@ class GUI(BaseGUI):
  \u2022 Split Lines - split one file into many based on number of lines
  \u2022 Split Value - split one file into many based on a column's value
  \u2022 SQL Import - create SQL CREATE TABLE and LOAD DATA statements
- \u2022 Uncombine - inverse of combine
 
 """, "normal")
 		
@@ -121,7 +120,6 @@ class GUI(BaseGUI):
 			
 			"Split Lines":["action", "input", "input-browse", "delim", "enclose", "escape", "encoding", "headers", "submit", "lines"],
 			"Split Value":["action", "input", "input-browse", "delim", "enclose", "escape", "encoding", "headers", "submit", "column"],
-			"Uncombine"  :["action", "input", "input-browse", "delim", "enclose", "escape", "encoding", "headers", "submit"],
 			
 			"Analyze"   :["action", "input", "input-browse", "output", "output-browse", "delim", "enclose", "escape", "encoding", "headers", "submit", "lines"],
 			"SQL Import":["action", "input", "input-browse", "output", "output-browse", "delim", "enclose", "escape", "encoding", "headers", "submit", "lines"]
@@ -136,7 +134,7 @@ class GUI(BaseGUI):
 	# -----------------------------------------------------------------------------------------------------------------------
 	# Creates all widgets
 	def create_widgets(self):	
-		actions = ("", "Analyze", "Combine", "Delim to Fixed", "Filter", "Fixed to Delim", "Head", "Remove Columns", "Repair", "Replace Pattern", "Replace Value", "Split Lines", "Split Value", "SQL Import", "Uncombine")
+		actions = ("", "Analyze", "Combine", "Delim to Fixed", "Filter", "Fixed to Delim", "Head", "Remove Columns", "Repair", "Replace Pattern", "Replace Value", "Split Lines", "Split Value", "SQL Import")
 		self.create_combobox(self, "action", "Action", actions)
 		self.widgets["action"].bind("<<ComboboxSelected>>", self.enable_widgets)
 		
@@ -167,7 +165,7 @@ class GUI(BaseGUI):
 	def get_action(self, inputs):
 		if inputs["action"] in ["Delim to Fixed", "Fixed to Delim"]:
 			return FixedAction
-		elif inputs["action"] in ["Split Lines", "Split Value", "Uncombine"]:
+		elif inputs["action"] in ["Split Lines", "Split Value"]:
 			return SplitAction
 		elif inputs["action"] in ["Analyze", "SQL Import"]:
 			return AnalyzeAction

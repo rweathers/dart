@@ -116,7 +116,7 @@ class Action(BaseAction):
 		
 		if len(self.inputs["input"]) == 0: message += "Input file(s) required\n"
 		
-		if (self.inputs["action"] not in ["split-lines", "split-value", "uncombine"]) and (self.inputs["output"] == ""): message += "Output file required\n"
+		if (self.inputs["action"] not in ["split-lines", "split-value"]) and (self.inputs["output"] == ""): message += "Output file required\n"
 		
 		if (self.inputs["action"] in ["delim-to-fixed", "fixed-to-delim"]) and (self.inputs["definition"] == ""): message += "Definition file required\n"
 		
@@ -828,9 +828,7 @@ class SplitAction(Action):
 						raise Exception("Column #" + str(c) + " does not exist on line " + str(j+1) + " of " + input_filename)
 					
 					# Save the header
-					if headers and (j == 0):
-						header_record = record
-						if self.inputs["action"] == "uncombine": del header_record[-1]
+					if headers and (j == 0): header_record = record
 					
 					if not headers:
 						# Determine output filename
@@ -844,9 +842,6 @@ class SplitAction(Action):
 							tmp = re.sub("[^A-Za-z0-9 _-]+", "", record[self.inputs["column"]])
 							if tmp == "": tmp = "BLANK"
 							output_filename_record = dirname + name + "-" + tmp + ext
-						elif self.inputs["action"] == "uncombine":
-							output_filename_record = dirname + record[-1]
-							del record[-1]
 						else:
 							raise Exception("Unknown action: " + self.inputs["action"])
 						

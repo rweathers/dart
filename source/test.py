@@ -48,7 +48,6 @@ def main():
 		
 		test_split_lines()
 		test_split_value()
-		test_uncombine()
 		
 		test_analyze()
 		test_sql_import()
@@ -566,44 +565,6 @@ def test_split_value():
 	contents_outputs_no_headers = {}
 	contents_outputs_no_headers["/tmp/test-input-file-foo.csv"] = '"foo","bar"\n' * 5
 	contents_outputs_no_headers["/tmp/test-input-file-bar.csv"] = '"bar","foo"\n' * 5
-	
-	# Test with and without headers
-	for h in [False, True]:
-		inputs["headers"] = h
-		
-		contents_input   = contents_input_headers  if h else contents_input_no_headers
-		contents_outputs = contents_outputs_headers if h else contents_outputs_no_headers
-		
-		message = "Processed 10 records sucessfully"
-		
-		success = test_helper_split(inputs, contents_input, contents_outputs, message)
-		if not success: return
-	
-	print("Test Passed: " + inputs["action"])
-	
-# ===========================================================================================================================
-# Uncombine test
-def test_uncombine():
-	inputs = {
-		"action"  :"uncombine",
-		"input"   :"/tmp/test-input-file.csv",
-		"delim"   :",",
-		"enclose" :"\"",
-		"escape"  :"\"",
-		"encoding":"utf-8"
-	}
-	
-	output_progress("Starting Test: " + inputs["action"])
-	
-	contents_input_headers = "FOO,BAR,FILENAME\n" + "foo,bar,foo.csv\nbar,foo,bar.csv\n" * 5	
-	contents_outputs_headers = {}
-	contents_outputs_headers["/tmp/foo.csv"] = '"FOO","BAR"\n' + '"foo","bar"\n' * 5
-	contents_outputs_headers["/tmp/bar.csv"] = '"FOO","BAR"\n' + '"bar","foo"\n' * 5
-	
-	contents_input_no_headers = "foo,bar,foo.csv\nbar,foo,bar.csv\n" * 5
-	contents_outputs_no_headers = {}
-	contents_outputs_no_headers["/tmp/foo.csv"] = '"foo","bar"\n' * 5
-	contents_outputs_no_headers["/tmp/bar.csv"] = '"bar","foo"\n' * 5
 	
 	# Test with and without headers
 	for h in [False, True]:

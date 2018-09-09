@@ -134,16 +134,12 @@ class CLI(BaseCLI):
 		print("    dart --a sql-import -i a.csv -o b.sql --headers --lines 1000")
 		print("")
 		
-		print("  uncombine - inverse of combine")
-		print("    dart -a uncombine -i a.csv")
-		print("")
-		
 	# -----------------------------------------------------------------------------------------------------------------------
 	# Returns the action class to use
 	def get_action(self, inputs):
 		if inputs["action"] in ["delim-to-fixed", "fixed-to-delim"]:
 			return FixedAction
-		elif inputs["action"] in ["split-lines", "split-value", "uncombine"]:
+		elif inputs["action"] in ["split-lines", "split-value"]:
 			return SplitAction
 		elif inputs["action"] in ["analyze", "sql-import"]:
 			return AnalyzeAction

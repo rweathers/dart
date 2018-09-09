@@ -15,7 +15,6 @@ dart is a tool for analyzing and manipulating delimited data files. It can be ru
  * Split Lines - split one file into many based on number of lines
  * Split Value - split one file into many based on a column's value
  * SQL Import - create SQL CREATE TABLE and LOAD DATA statements
- * Uncombine - inverse of combine
 
 ## Installation
 
