@@ -74,8 +74,8 @@ def test_combine():
 	
 	contents_input = "foo,bar\nbar,foo\n"
 	
-	contents_output_combined_headers = '"foo","bar"\n"bar","foo"\n"bar","foo"\n"bar","foo"\n'
-	contents_output_combined_no_headers = '"foo","bar"\n"bar","foo"\n"foo","bar"\n"bar","foo"\n"foo","bar"\n"bar","foo"\n'
+	contents_output_combined_headers = 'foo,bar\nbar,foo\nbar,foo\nbar,foo\n'
+	contents_output_combined_no_headers = 'foo,bar\nbar,foo\nfoo,bar\nbar,foo\nfoo,bar\nbar,foo\n'
 	
 	# Test single output only
 	inputs["output"] = "/tmp/test-output.csv"
@@ -122,15 +122,15 @@ def test_filter():
 		inputs["invert"] = i
 		
 		if not inputs["invert"]:
-			contents_output_combined_headers = '"field1","field2"\n' + ('"bar","foo"\n' * 3)
-			contents_output_combined_no_headers = '"bar","foo"\n' * 3
-			contents_output_individual_headers = '"field1","field2"\n"bar","foo"\n'
-			contents_output_individual_no_headers = '"bar","foo"\n'
+			contents_output_combined_headers = 'field1,field2\n' + ('bar,foo\n' * 3)
+			contents_output_combined_no_headers = 'bar,foo\n' * 3
+			contents_output_individual_headers = 'field1,field2\nbar,foo\n'
+			contents_output_individual_no_headers = 'bar,foo\n'
 		else:
-			contents_output_combined_headers = '"field1","field2"\n' + ('"foo","bar"\n' * 3)
-			contents_output_combined_no_headers = '"field1","field2"\n"foo","bar"\n' * 3
-			contents_output_individual_headers = '"field1","field2"\n"foo","bar"\n'
-			contents_output_individual_no_headers = '"field1","field2"\n"foo","bar"\n'
+			contents_output_combined_headers = 'field1,field2\n' + ('foo,bar\n' * 3)
+			contents_output_combined_no_headers = 'field1,field2\nfoo,bar\n' * 3
+			contents_output_individual_headers = 'field1,field2\nfoo,bar\n'
+			contents_output_individual_no_headers = 'field1,field2\nfoo,bar\n'
 		
 		# Test single, multiple and in-place outputs
 		for o in ["test-output.csv", "{f}-out{e}", "{f}{e}"]:
@@ -174,10 +174,10 @@ def test_head():
 	
 	contents_input = "foo,bar\n" * 10
 	
-	contents_output_combined_headers = '"foo","bar"\n' * 16
-	contents_output_combined_no_headers = '"foo","bar"\n' * 15
-	contents_output_individual_headers = '"foo","bar"\n' * 6
-	contents_output_individual_no_headers = '"foo","bar"\n' * 5
+	contents_output_combined_headers = 'foo,bar\n' * 16
+	contents_output_combined_no_headers = 'foo,bar\n' * 15
+	contents_output_individual_headers = 'foo,bar\n' * 6
+	contents_output_individual_no_headers = 'foo,bar\n' * 5
 	
 	# Test single, multiple and in-place outputs
 	for o in ["test-output.csv", "{f}-out{e}", "{f}{e}"]:
@@ -516,10 +516,10 @@ def test_split_lines():
 	output_progress("Starting Test: " + inputs["action"])
 	
 	contents_input_headers = "FOO,BAR\n" + "foo,bar\n" * 10
-	contents_output_headers = '"FOO","BAR"\n' + '"foo","bar"\n' * 2
+	contents_output_headers = 'FOO,BAR\n' + 'foo,bar\n' * 2
 	
 	contents_input_no_headers = "foo,bar\n" * 10
-	contents_output_no_headers = '"foo","bar"\n' * 2
+	contents_output_no_headers = 'foo,bar\n' * 2
 	
 	contents_outputs_headers = {}
 	for i in range(1, 6): contents_outputs_headers["/tmp/test-input-file-{i}.csv".format(i=i)] = contents_output_headers
@@ -558,13 +558,13 @@ def test_split_value():
 	
 	contents_input_headers = "FOO,BAR\n" + "foo,bar\nbar,foo\n" * 5	
 	contents_outputs_headers = {}
-	contents_outputs_headers["/tmp/test-input-file-foo.csv"] = '"FOO","BAR"\n' + '"foo","bar"\n' * 5
-	contents_outputs_headers["/tmp/test-input-file-bar.csv"] = '"FOO","BAR"\n' + '"bar","foo"\n' * 5
+	contents_outputs_headers["/tmp/test-input-file-foo.csv"] = 'FOO,BAR\n' + 'foo,bar\n' * 5
+	contents_outputs_headers["/tmp/test-input-file-bar.csv"] = 'FOO,BAR\n' + 'bar,foo\n' * 5
 	
 	contents_input_no_headers = "foo,bar\nbar,foo\n" * 5
 	contents_outputs_no_headers = {}
-	contents_outputs_no_headers["/tmp/test-input-file-foo.csv"] = '"foo","bar"\n' * 5
-	contents_outputs_no_headers["/tmp/test-input-file-bar.csv"] = '"bar","foo"\n' * 5
+	contents_outputs_no_headers["/tmp/test-input-file-foo.csv"] = 'foo,bar\n' * 5
+	contents_outputs_no_headers["/tmp/test-input-file-bar.csv"] = 'bar,foo\n' * 5
 	
 	# Test with and without headers
 	for h in [False, True]:

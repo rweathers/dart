@@ -107,9 +107,9 @@ class GUI(BaseGUI):
 		actions = {
 			"":["action"],
 			
-			"Combine"        :["action", "input", "input-browse", "output", "output-browse", "delim", "enclose", "escape", "encoding", "headers", "submit"],
+			"Combine"        :["action", "input", "input-browse", "output", "output-browse",                               "encoding", "headers", "submit"],
 			"Filter"         :["action", "input", "input-browse", "output", "output-browse", "delim", "enclose", "escape", "encoding", "headers", "submit", "column", "invert", "pattern"],
-			"Head"           :["action", "input", "input-browse", "output", "output-browse", "delim", "enclose", "escape", "encoding", "headers", "submit", "lines"],
+			"Head"           :["action", "input", "input-browse", "output", "output-browse",                               "encoding", "headers", "submit", "lines"],
 			"Remove Columns" :["action", "input", "input-browse", "output", "output-browse", "delim", "enclose", "escape", "encoding", "headers", "submit", "columns", "invert"],
 			"Repair"         :["action", "input", "input-browse", "output", "output-browse", "delim", "enclose", "escape", "encoding", "headers", "submit"],
 			"Replace Pattern":["action", "input", "input-browse", "output", "output-browse", "delim", "enclose", "escape", "encoding", "headers", "submit", "column", "find", "replace"],
@@ -118,7 +118,7 @@ class GUI(BaseGUI):
 			"Delim to Fixed":["action", "input", "input-browse", "output", "output-browse", "delim", "enclose", "escape", "encoding", "headers", "submit", "definition", "definition-browse"],
 			"Fixed to Delim":["action", "input", "input-browse", "output", "output-browse", "delim", "enclose", "escape", "encoding", "headers", "submit", "definition", "definition-browse"],
 			
-			"Split Lines":["action", "input", "input-browse", "delim", "enclose", "escape", "encoding", "headers", "submit", "lines"],
+			"Split Lines":["action", "input", "input-browse",                               "encoding", "headers", "submit", "lines"],
 			"Split Value":["action", "input", "input-browse", "delim", "enclose", "escape", "encoding", "headers", "submit", "column"],
 			
 			"Analyze"   :["action", "input", "input-browse", "output", "output-browse", "delim", "enclose", "escape", "encoding", "headers", "submit", "lines"],

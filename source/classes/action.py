@@ -642,24 +642,27 @@ class BasicAction(Action):
 						
 						# Skip the header row on all files except the first one, unless each file gets its own output
 						if (f == 0) or (not headers) or inidvidual_outputs:
-							# Parse the data
-							record = self.parse_data(line, self.inputs["delim"], self.inputs["enclose"], self.inputs["escape"])
+							record = None
+							if self.inputs["action"] not in ["combine", "head"]:
+								# Parse the data
+								record = self.parse_data(line, self.inputs["delim"], self.inputs["enclose"], self.inputs["escape"])
 							
-							# Column error checking
-							columns = []
-							if isinstance(self.inputs["columns"], list): columns = self.inputs["columns"]
-							if isinstance(self.inputs["column"], int): columns.append(self.inputs["column"])
-							for c in columns:
-								if c > len(record):
-									raise Exception("Column #" + str(c) + " does not exist on line " + str(j+1) + " of " + input_filename)
+								# Column error checking
+								columns = []
+								if isinstance(self.inputs["columns"], list): columns = self.inputs["columns"]
+								if isinstance(self.inputs["column"], int): columns.append(self.inputs["column"])
+								for c in columns:
+									if c > len(record):
+										raise Exception("Column #" + str(c) + " does not exist on line " + str(j+1) + " of " + input_filename)
 							
 							# Process the record
+							record_changed = False
 							if self.inputs["action"] == "combine":
 								pass
 							elif self.inputs["action"] == "filter":
 								if not headers:
 									match = re.search(self.inputs["pattern"], record[self.inputs["column"]])
-									if not((match and not self.inputs["invert"]) or (not match and self.inputs["invert"])): record = None
+									if not((match and not self.inputs["invert"]) or (not match and self.inputs["invert"])): line = None
 							elif self.inputs["action"] == "head":
 								if (j+1) > self.inputs["lines"]: break
 							elif self.inputs["action"] == "remove-columns":
@@ -668,18 +671,23 @@ class BasicAction(Action):
 									self.inputs["columns"].sort(reverse=True)
 									self.inputs["invert"] = False
 								for k in self.inputs["columns"]: del record[k]
+								record_changed = True
 							elif self.inputs["action"] == "repair":
-								pass
+								record_changed = True
 							elif self.inputs["action"] == "replace-pattern":
 								if not headers: record[self.inputs["column"]] = re.sub(self.inputs["find"], self.inputs["replace"], record[self.inputs["column"]])
+								record_changed = True
 							elif self.inputs["action"] == "replace-value":
 								if not headers: record[self.inputs["column"]] = record[self.inputs["column"]].replace(self.inputs["find"], self.inputs["replace"])
+								record_changed = True
 							else:
 								raise Exception("Unknown action: " + self.inputs["action"])
 							
-							# Output the record
-							if record is not None:
-								f_out.write(self.unparse_data(record, self.inputs["delim"], self.inputs["enclose"], self.inputs["escape"]) + "\n")
+							# Update the line if needed
+							if record_changed: line = self.unparse_data(record, self.inputs["delim"], self.inputs["enclose"], self.inputs["escape"])
+							
+							# Output the line
+							if line is not None: f_out.write(line + "\n")
 							
 							if not headers:
 								j += 1
@@ -814,21 +822,23 @@ class SplitAction(Action):
 			f_in = self.open(input_filename, "r", self.inputs["encoding"])
 			try:
 				headers = self.inputs["headers"]
-				header_record = None
+				header_line = None
 				j = 0
 				for line in DataReader(f_in):
 					b += len(line.encode(self.inputs["encoding"])) + len(os.linesep)
 					
-					# Parse the data
-					record = self.parse_data(line, self.inputs["delim"], self.inputs["enclose"], self.inputs["escape"])
-					
-					# Column error checking
-					c = self.inputs["column"]
-					if isinstance(c, int) and (c > len(record)):
-						raise Exception("Column #" + str(c) + " does not exist on line " + str(j+1) + " of " + input_filename)
+					record = None
+					if self.inputs["action"] not in ["split-lines"]:
+						# Parse the data
+						record = self.parse_data(line, self.inputs["delim"], self.inputs["enclose"], self.inputs["escape"])
+						
+						# Column error checking
+						c = self.inputs["column"]
+						if isinstance(c, int) and (c > len(record)):
+							raise Exception("Column #" + str(c) + " does not exist on line " + str(j+1) + " of " + input_filename)
 					
 					# Save the header
-					if headers and (j == 0): header_record = record
+					if headers and (j == 0): header_line = line
 					
 					if not headers:
 						# Determine output filename
@@ -858,10 +868,10 @@ class SplitAction(Action):
 								output_filenames.append(output_filename_current)
 								
 								# Output the header if needed
-								if header_record is not None: f_out.write(self.unparse_data(header_record, self.inputs["delim"], self.inputs["enclose"], self.inputs["escape"]) + "\n")
+								if header_line is not None: f_out.write(header_line + "\n")
 						
-						# Output the data
-						f_out.write(self.unparse_data(record, self.inputs["delim"], self.inputs["enclose"], self.inputs["escape"]) + "\n")
+						# Output the line
+						f_out.write(line + "\n")
 						
 						j += 1
 						i += 1
