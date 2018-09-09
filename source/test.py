@@ -667,10 +667,10 @@ Bob,,12345,123,123.45,07/17/17,14:00,2017-07-16 16:00:00,0
 	date CHAR(8) NOT NULL,
 	time TIME NOT NULL,
 	datetime DATETIME NOT NULL,
-	boolean TINYINT NOT NULL
+	boolean CHAR(1) NOT NULL
 );
 
-LOAD DATA INFILE '/tmp/test-input-file1.csv' INTO TABLE test_input_file1 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' LINES TERMINATED BY '\\n' IGNORE 1 LINES;
+LOAD DATA INFILE '/tmp/test-input-file1.csv' IGNORE INTO TABLE test_input_file1 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' LINES TERMINATED BY '\\n' IGNORE 1 LINES;
 '''
 	
 	contents_input_no_headers = contents_input_data
@@ -683,10 +683,10 @@ LOAD DATA INFILE '/tmp/test-input-file1.csv' INTO TABLE test_input_file1 FIELDS 
 	field_5 CHAR(8) NOT NULL,
 	field_6 TIME NOT NULL,
 	field_7 DATETIME NOT NULL,
-	field_8 TINYINT NOT NULL
+	field_8 CHAR(1) NOT NULL
 );
 
-LOAD DATA INFILE '/tmp/test-input-file1.csv' INTO TABLE test_input_file1 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' LINES TERMINATED BY '\\n';
+LOAD DATA INFILE '/tmp/test-input-file1.csv' IGNORE INTO TABLE test_input_file1 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' LINES TERMINATED BY '\\n';
 '''
 	
 	# Test with and without headers
