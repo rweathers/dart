@@ -74,8 +74,8 @@ def test_combine():
 	
 	contents_input = "foo,bar\nbar,foo\n"
 	
-	contents_output_combined_headers = '"foo","bar","Original Filename"\n"bar","foo","test-input-file1.csv"\n"bar","foo","test-input-file2.csv"\n"bar","foo","test-input-file3.csv"\n'
-	contents_output_combined_no_headers = '"foo","bar","test-input-file1.csv"\n"bar","foo","test-input-file1.csv"\n"foo","bar","test-input-file2.csv"\n"bar","foo","test-input-file2.csv"\n"foo","bar","test-input-file3.csv"\n"bar","foo","test-input-file3.csv"\n'
+	contents_output_combined_headers = '"foo","bar"\n"bar","foo"\n"bar","foo"\n"bar","foo"\n'
+	contents_output_combined_no_headers = '"foo","bar"\n"bar","foo"\n"foo","bar"\n"bar","foo"\n"foo","bar"\n"bar","foo"\n'
 	
 	# Test single output only
 	inputs["output"] = "/tmp/test-output.csv"

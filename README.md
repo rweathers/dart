@@ -3,7 +3,7 @@
 dart is a tool for analyzing and manipulating delimited data files. It can be run in either CLI or GUI mode, and can perform the following actions:
 
  * Analyze - analyze a file and output a summary of its contents
- * Combine - combine multiple files and append original filename
+ * Combine - combine multiple files
  * Delim to Fixed - covert a delimited file to a fixed width file
  * Filter - filter records based on a column's value
  * Fixed to Delim - covert a fixed width file to a delimited file

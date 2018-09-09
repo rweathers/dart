@@ -83,7 +83,7 @@ class CLI(BaseCLI):
 		print("    dart -a analyze -i a.csv -o b.csv --headers --lines 1000")
 		print("")
 		
-		print("  combine - combine multiple files and append original filename")
+		print("  combine - combine multiple files")
 		print("    dart -a combine -i *.csv -o b.csv")
 		print("")
 		

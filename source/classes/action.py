@@ -655,7 +655,7 @@ class BasicAction(Action):
 							
 							# Process the record
 							if self.inputs["action"] == "combine":
-								record.append("Original Filename" if headers else os.path.basename(input_filename))
+								pass
 							elif self.inputs["action"] == "filter":
 								if not headers:
 									match = re.search(self.inputs["pattern"], record[self.inputs["column"]])

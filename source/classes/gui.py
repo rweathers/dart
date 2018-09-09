@@ -50,7 +50,7 @@ class GUI(BaseGUI):
 		
 		help.insert(tk.END, "Action\n\n", "italic")
 		help.insert(tk.END, """ \u2022 Analyze - analyze a file and output a summary of its contents
- \u2022 Combine - combine multiple files and append original filename
+ \u2022 Combine - combine multiple files
  \u2022 Delim to Fixed - covert a delimited file to a fixed width file
  \u2022 Filter - filter records based on a column's value
  \u2022 Fixed to Delim - covert a fixed width file to a delimited file
