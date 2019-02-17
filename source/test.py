@@ -1,10 +1,12 @@
 #! /usr/bin/python3
 
+"""dart unit tests."""
+
 #############################################################################################################################
-# dart - Analyze and manipulate delimited data files.
+# dart
 # Test script
 #
-# Copyright © 2017 Ryan Weathers, All Rights Reserved.
+# Copyright © 2017, 2018, 2019 Ryan Weathers, All Rights Reserved.
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,46 +23,15 @@
 #############################################################################################################################
 
 import os
+from datetime import datetime
 from hydra import progress
-from classes.action import AnalyzeAction
-from classes.action import BasicAction
-from classes.action import FixedAction
-from classes.action import SplitAction
+from dart import *
 
 last_update = 0
 
-# ===========================================================================================================================
-# Main function
-def main():
-	try:	
-		print("")
-		
-		test_combine()
-		test_filter()
-		test_head()
-		test_remove_columns()
-		test_repair()
-		test_replace_pattern()
-		test_replace_value()
-		
-		test_delim_to_fixed()
-		test_fixed_to_delim()
-		
-		test_split_lines()
-		test_split_value()
-		
-		test_analyze()
-		test_sql_import()
-		
-		print("")
-	except Exception as e:
-		import traceback
-		print("ERROR: " + str(e))
-		print(traceback.format_exc())
-
-# ===========================================================================================================================
-# Combine test
 def test_combine():
+	"""Test combine action."""
+	
 	inputs = {
 		"action"  :"combine",
 		"input"   :["/tmp/test-input-file1.csv", "/tmp/test-input-file2.csv", "/tmp/test-input-file3.csv"],	
@@ -99,9 +70,9 @@ def test_combine():
 	
 	print("Test Passed: " + inputs["action"])
 	
-# ===========================================================================================================================
-# Filter test
 def test_filter():
+	"""Test filter action."""
+	
 	inputs = {
 		"action"  :"filter",
 		"column"  :1,
@@ -157,9 +128,9 @@ def test_filter():
 	
 	print("Test Passed: " + inputs["action"])
 	
-# ===========================================================================================================================
-# Head test
 def test_head():
+	"""Test head action."""
+	
 	inputs = {
 		"action"  :"head",
 		"input"   :["/tmp/test-input-file1.csv", "/tmp/test-input-file2.csv", "/tmp/test-input-file3.csv"],	
@@ -204,9 +175,9 @@ def test_head():
 	
 	print("Test Passed: " + inputs["action"])
 	
-# ===========================================================================================================================
-# Remove Columns test
 def test_remove_columns():
+	"""Test remove columns action."""
+	
 	inputs = {
 		"action"  :"remove-columns",
 		"columns" :"0,2-4",
@@ -257,9 +228,9 @@ def test_remove_columns():
 		
 	print("Test Passed: " + inputs["action"])
 
-# ===========================================================================================================================
-# Repair test
 def test_repair():
+	"""Test repair action."""
+	
 	inputs = {
 		"action"  :"repair",
 		"input"   :["/tmp/test-input-file1.csv", "/tmp/test-input-file2.csv", "/tmp/test-input-file3.csv"],	
@@ -300,9 +271,9 @@ def test_repair():
 	
 	print("Test Passed: " + inputs["action"])
 	
-# ===========================================================================================================================
-# Replace Pattern test
 def test_replace_pattern():
+	"""Test replace pattern action."""
+	
 	inputs = {
 		"action"  :"replace-pattern",
 		"column"  :0,
@@ -351,9 +322,9 @@ def test_replace_pattern():
 	
 	print("Test Passed: " + inputs["action"])
 	
-# ===========================================================================================================================
-# Replace Value test
 def test_replace_value():
+	"""Test replace value action."""
+	
 	inputs = {
 		"action"  :"replace-value",
 		"column"  :0,
@@ -402,9 +373,9 @@ def test_replace_value():
 	
 	print("Test Passed: " + inputs["action"])
 
-# ===========================================================================================================================
-# Delim to Fixed test
 def test_delim_to_fixed():
+	"""Test delim to fixed action."""
+	
 	inputs = {
 		"action"    :"delim-to-fixed",
 		"definition":"/tmp/fixed.def",
@@ -451,9 +422,9 @@ def test_delim_to_fixed():
 	
 	print("Test Passed: " + inputs["action"])
 	
-# ===========================================================================================================================
-# Fixed to Delim test
 def test_fixed_to_delim():
+	"""Test fixed to delim action."""
+	
 	inputs = {
 		"action"    :"fixed-to-delim",
 		"definition":"/tmp/fixed.def",
@@ -500,9 +471,9 @@ def test_fixed_to_delim():
 	
 	print("Test Passed: " + inputs["action"])
 
-# ===========================================================================================================================
-# Split Lines test
 def test_split_lines():
+	"""Test split line action."""
+	
 	inputs = {
 		"action"  :"split-lines",
 		"lines"   :2,
@@ -541,9 +512,9 @@ def test_split_lines():
 	
 	print("Test Passed: " + inputs["action"])
 
-# ===========================================================================================================================
-# Split Value test
 def test_split_value():
+	"""Test split value action."""
+	
 	inputs = {
 		"action"  :"split-value",
 		"column"  :0,
@@ -580,9 +551,9 @@ def test_split_value():
 	
 	print("Test Passed: " + inputs["action"])
 
-# ===========================================================================================================================
-# Analyze
 def test_analyze():
+	"""Test analyze action."""
+	
 	inputs = {
 		"action"  :"analyze",
 		"lines"   :0,
@@ -637,9 +608,9 @@ Bob,,12345,123,123.45,07/17/17,14:00,2017-07-16 16:00:00,0
 	
 	print("Test Passed: " + inputs["action"])
 	
-# ===========================================================================================================================
-# SQL Import
 def test_sql_import():
+	"""Test SQL import action."""
+	
 	inputs = {
 		"action"  :"sql-import",
 		"lines"   :0,
@@ -709,9 +680,9 @@ LOAD DATA INFILE '/tmp/test-input-file1.csv' IGNORE INTO TABLE test_input_file1 
 	
 	print("Test Passed: " + inputs["action"])
 
-# ===========================================================================================================================
-# Basic test helper
 def test_helper(action, inputs, contents_input, contents_output, expected_message):
+	"""Test helper."""
+	
 	if "column"  not in inputs: inputs["column"]  = ""
 	if "columns" not in inputs: inputs["columns"] = ""
 	
@@ -720,9 +691,7 @@ def test_helper(action, inputs, contents_input, contents_output, expected_messag
 	
 	# Perform the action
 	action = action(dict(inputs), output_progress)
-	action.standardize()
-	action.validate()
-	message = action.action()
+	message = action.execute()
 	output_progress("")
 	
 	# Check the message
@@ -758,9 +727,9 @@ def test_helper(action, inputs, contents_input, contents_output, expected_messag
 	
 	return True
 	
-# ===========================================================================================================================
-# Split test helper
 def test_helper_split(inputs, contents_input, contents_outputs, expected_message):
+	"""Split test helper."""
+	
 	if "column"  not in inputs: inputs["column"]  = ""
 	if "columns" not in inputs: inputs["columns"] = ""
 	
@@ -769,9 +738,7 @@ def test_helper_split(inputs, contents_input, contents_outputs, expected_message
 	
 	# Perform the action
 	action = SplitAction(dict(inputs), output_progress)
-	action.standardize()
-	action.validate()
-	message = action.action()
+	message = action.execute()
 	output_progress("")
 	
 	# Check the message
@@ -798,9 +765,9 @@ def test_helper_split(inputs, contents_input, contents_outputs, expected_message
 	
 	return True
 	
-# ===========================================================================================================================
-# Callback to output progress
 def output_progress(text, started=None, processed=None, total=None):
+	"""Callback to output progress."""
+	
 	global last_update
 	
 	p = progress(last_update, text, started, processed, total)
@@ -808,16 +775,41 @@ def output_progress(text, started=None, processed=None, total=None):
 		last_update = p[0]
 		print(p[1].ljust(80)[0:80-1] + "\r", end="", flush=True)
 
-# ===========================================================================================================================
-# Writes a string to a file
 def writeall(text, filename, encoding="utf-8"):
+	"""Write a string to a file."""
 	with open(filename, mode="w", encoding=encoding) as f: f.write(text)
 
-# ===========================================================================================================================
-# Reads a file into a string
 def readall(filename, encoding="utf-8"):
+	"""Read a file into a string."""	
 	with open(filename, mode="r", encoding=encoding) as f: return f.read()
 	
-# ===========================================================================================================================
+def main():
+	"""Run all tests."""
+	
+	try:	
+		print("")
+		
+		test_combine()
+		test_filter()
+		test_head()
+		test_remove_columns()
+		test_repair()
+		test_replace_pattern()
+		test_replace_value()
+		
+		test_delim_to_fixed()
+		test_fixed_to_delim()
+		
+		test_split_lines()
+		test_split_value()
+		
+		test_analyze()
+		test_sql_import()
+		
+		print("")
+	except Exception as e:
+		import traceback
+		print("ERROR: " + str(e))
+		print(traceback.format_exc())
 
 main()

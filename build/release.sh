@@ -8,11 +8,9 @@ mkdir $version
 cd $version
 
 mkdir script
-mkdir script/classes
 
 cp ../../source/dart.py           script/dart.py
 cp ../../source/dart.template.ini script/dart.conf
-cp ../../source/classes/*.py      script/classes
 
 cp ../../COPYING script/COPYING
 

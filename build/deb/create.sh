@@ -6,12 +6,10 @@ mkdir debian/etc
 mkdir debian/usr/bin
 mkdir debian/usr/lib
 mkdir debian/usr/lib/dart
-mkdir debian/usr/lib/dart/classes
 
 ln -sf ../lib/dart/dart.py debian/usr/bin/dart
 
 cp ../../source/dart.py           debian/usr/lib/dart/dart.py
-cp ../../source/classes/*.py      debian/usr/lib/dart/classes
 cp ../../source/dart.template.ini debian/etc/dart.conf
 
 cp ../resources/dart.png debian/usr/share/doc/dart/dart.png
@@ -35,12 +33,10 @@ gunzip debian/usr/share/doc/dart/changelog.gz
 mv debian/usr/share/applications/dart.desktop debian/usr/share/applications/desktop.txt
 rm debian/usr/share/doc/dart/dart.png
 rm debian/etc/dart.conf
-rm debian/usr/lib/dart/classes/*
 rm debian/usr/lib/dart/dart.py
 
 rm debian/usr/bin/dart
 
-rmdir debian/usr/lib/dart/classes
 rmdir debian/usr/lib/dart
 rmdir debian/usr/lib
 rmdir debian/usr/bin

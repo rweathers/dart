@@ -6,7 +6,7 @@
 
 /source/dart.ini
 /source/dart.err
-/source/classes/__pycache__
+/source/__pycache__
 
 /source/test-files/output*
 /source/test-files/split-lines-*.csv
