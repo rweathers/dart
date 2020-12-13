@@ -1048,8 +1048,8 @@ class CLI(BaseCLI):
 		print("")
 		
 		print("  sql-import - create SQL CREATE TABLE and LOAD DATA statements")
-		print("    dart --a sql-import -i a.csv -o b.sql --headers")
-		print("    dart --a sql-import -i a.csv -o b.sql --headers --lines 1000")
+		print("    dart -a sql-import -i a.csv -o b.sql --headers")
+		print("    dart -a sql-import -i a.csv -o b.sql --headers --lines 1000")
 		print("")
 		
 	def get_action(self, inputs):
