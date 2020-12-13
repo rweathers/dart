@@ -5,7 +5,7 @@
 #############################################################################################################################
 # dart
 #
-# Copyright © 2017, 2018, 2019 Ryan Weathers, All Rights Reserved.
+# Copyright © 2017, 2018, 2019, 2020 Ryan Weathers, All Rights Reserved.
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -39,7 +39,7 @@ program = {
 	"date"     :"09/09/2018",
 	"purpose"  :"Analyze and manipulate delimited data files.",
 	"url"      :"https://github.com/rweathers/dart",
-	"copyright":"Copyright © 2017, 2018, 2019 Ryan Weathers, All Rights Reserved.",
+	"copyright":"Copyright © 2017, 2018, 2019, 2020 Ryan Weathers, All Rights Reserved.",
 	"license"  :"This program is free software: you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\nGNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License\nalong with this program.  If not, see <http://www.gnu.org/licenses/>.",
 	"config"   :"{path}dart.ini",
 	"error"    :"{path}dart.err"
@@ -1074,12 +1074,12 @@ class GUI(BaseGUI):
 	def define_menu(self):
 		"""Define the menu."""
 		
-		self.menu = [
-			("File"    , [("Exit", self.quit)]),
-			("Edit"    , [("Reset", self.reset)]),
-			("Settings", [("Open Config File", self.open_config)]),
-			("Help"    , [("Help", self.show_help), ("About", self.show_about)])
-		]
+		self.menu = {
+			"File":{"Exit":self.quit},
+			"Edit":{"Reset":self.set_defaults},
+			"Settings":{"Open Config File":self.open_config},
+			"Help":{"Help":self.show_help, "About":self.show_about}
+		}
 	
 	def define_help(self, help):
 		"""Define the help information."""
