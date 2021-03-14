@@ -97,9 +97,9 @@ class Action(BaseAction):
 	def validate(self):
 		"""Raise an exception if any of the user's inputs are invalid."""
 		
-		message = ""
+		errors = []
 		
-		if self.inputs["action"] == "": message += "Action required\n"
+		if self.inputs["action"] == "": errors.append("Action required.")
 		
 		# Validate column
 		if self.inputs["action"] in ["filter", "replace-pattern", "replace-value", "split-value"]:
@@ -107,7 +107,7 @@ class Action(BaseAction):
 				if not isinstance(self.inputs["column"], int): raise Exception()
 				if self.inputs["column"] < 0: raise Exception()
 			except Exception as e:
-				message += "column must be a positive integer\n"
+				errors.append("Column must be a positive integer.")
 			
 		# Validate columns
 		if self.inputs["action"] in ["remove-columns"]:
@@ -116,7 +116,7 @@ class Action(BaseAction):
 				for i in self.inputs["columns"]:
 					if i < 0: raise Exception()
 			except Exception as e:
-				message += "columns must be a comma separated list of positive integers\n"
+				errors.append("Columns must be a comma separated list of positive integers.")
 		
 		# Validate lines
 		if self.inputs["action"] in ["analyze", "sql-import"]:
@@ -124,23 +124,23 @@ class Action(BaseAction):
 				if not isinstance(self.inputs["lines"], int): raise Exception()
 				if self.inputs["lines"] < 0: raise Exception()
 			except Exception as e:
-				message += "if supplied, lines must be a non-negative integer\n"
+				errors.append("If supplied, lines must be a non-negative integer.")
 		elif self.inputs["action"] in ["head", "split-lines"]:
 			try:
 				if not isinstance(self.inputs["lines"], int): raise Exception()
 				if self.inputs["lines"] <= 0: raise Exception()
 			except Exception as e:
-				message += "lines must be a positive integer\n"
+				errors.append("Lines must be a positive integer.")
 		
-		if len(self.inputs["input"]) == 0: message += "Input file(s) required\n"
+		if len(self.inputs["input"]) == 0: errors.append("Input file(s) required.")
 		
-		if (self.inputs["action"] not in ["split-lines", "split-value"]) and (self.inputs["output"] == ""): message += "Output file required\n"
+		if (self.inputs["action"] not in ["split-lines", "split-value"]) and (self.inputs["output"] == ""): errors.append("Output file required.")
 		
-		if (self.inputs["action"] in ["delim-to-fixed", "fixed-to-delim"]) and (self.inputs["definition"] == ""): message += "Definition file required\n"
+		if (self.inputs["action"] in ["delim-to-fixed", "fixed-to-delim"]) and (self.inputs["definition"] == ""): errors.append("Definition file required.")
 		
-		if self.inputs["encoding"] == "": message += "File encoding required\n"
+		if self.inputs["encoding"] == "": errors.append("File encoding required.")
 		
-		if message != "": raise Exception(message)
+		if errors: raise Exception("\n".join(errors))
 	
 	def parse_data(self, record, delim=",", enclose="\"", escape="\""):
 		"""Parse a delimited string into a list and return it."""
@@ -235,8 +235,8 @@ class AnalyzeAction(Action):
 		datetime_formats = []
 		for d in date_formats:
 			for t in time_formats:
-				datetime_formats.append(d + " " + t)
-
+				datetime_formats.append("{} {}".format(d, t))
+		
 		# Loop over input files
 		b = i = f = 0
 		started = time.time()
@@ -269,7 +269,7 @@ class AnalyzeAction(Action):
 						k = 0
 						for value in record:
 							field = {
-								"name":value if headers else "field-" + str(k),
+								"name":value if headers else "field-{}".format(k),
 								
 								"length-min":None,
 								"length-avg":0,
@@ -351,18 +351,18 @@ class AnalyzeAction(Action):
 								def dt_helper(key, formats):
 									if d[key]:
 										val = None
-										formats = [d[key + "-format"]] if d[key + "-format"] is not None else formats
+										formats = [d["{}-format".format(key)]] if d["{}-format".format(key)] is not None else formats
 										for format in formats:
 											try:
 												val = datetime.strptime(value, format)
-												d[key + "-format"] = format
+												d["{}-format".format(key)] = format
 												break
 											except Exception as e:
 												pass
 												
 										if val is not None:
-											if (d[key + "-min"] is None) or (val < datetime.strptime(d[key + "-min"], d[key + "-format"])): d[key + "-min"] = value
-											if (d[key + "-max"] is None) or (val > datetime.strptime(d[key + "-max"], d[key + "-format"])): d[key + "-max"] = value
+											if (d["{}-min".format(key)] is None) or (val < datetime.strptime(d["{}-min".format(key)], d["{}-format".format(key)])): d["{}-min".format(key)] = value
+											if (d["{}-max".format(key)] is None) or (val > datetime.strptime(d["{}-max".format(key)], d["{}-format".format(key)])): d["{}-max".format(key)] = value
 										else:
 											d[key] = False
 								
@@ -395,9 +395,9 @@ class AnalyzeAction(Action):
 					if (self.inputs["lines"] > 0) and (j >= self.inputs["lines"]): break
 					
 					if self.inputs["lines"] > 0:
-						self.progress("Record: " + str(i), started, i, self.inputs["lines"] * len(self.inputs["input"]))
+						self.progress("Record: {}".format(i), started, i, self.inputs["lines"] * len(self.inputs["input"]))
 					else:
-						self.progress("Record: " + str(i), started, b, total_bytes)
+						self.progress("Record: {}".format(i), started, b, total_bytes)
 					
 				# Clean up blank fields
 				for field in fields:
@@ -610,7 +610,7 @@ class AnalyzeAction(Action):
 					parts = [table_name, ",\n".join(columns), escape(os.path.abspath(input_filename)), table_name, escape(self.inputs["delim"]), escape(self.inputs["enclose"]), escape(os.linesep), " IGNORE 1 LINES" if self.inputs["headers"] else ""]
 					results = "CREATE TABLE {}(\n{}\n);\n\nLOAD DATA INFILE '{}' IGNORE INTO TABLE {} FIELDS TERMINATED BY '{}' OPTIONALLY ENCLOSED BY '{}' LINES TERMINATED BY '{}'{};\n".format(*parts)
 				else:
-					raise Exception("Unknown action: " + self.inputs["action"])
+					raise Exception("Unknown action: {}".format(self.inputs["action"]))
 			else:
 				results = "No data found."
 			
@@ -624,7 +624,7 @@ class AnalyzeAction(Action):
 			
 			f += 1
 		
-		return "Processed " + str(i) + " records sucessfully"
+		return "Processed {} records sucessfully".format(i)
 
 class BasicAction(Action):
 	"""Class to perform basic actions."""
@@ -671,7 +671,7 @@ class BasicAction(Action):
 								if isinstance(self.inputs["column"], int): columns.append(self.inputs["column"])
 								for c in columns:
 									if c > len(record):
-										raise Exception("Column #" + str(c+1) + " does not exist on line " + str(j+1) + " of " + input_filename)
+										raise Exception("Column #{} does not exist on line {} of '{}'".format(c+1, j+1, input_filename))
 							
 							# Process the record
 							record_changed = False
@@ -699,7 +699,7 @@ class BasicAction(Action):
 								if not headers: record[self.inputs["column"]] = record[self.inputs["column"]].replace(self.inputs["find"], self.inputs["replace"])
 								record_changed = True
 							else:
-								raise Exception("Unknown action: " + self.inputs["action"])
+								raise Exception("Unknown action: {}".format(self.inputs["action"]))
 							
 							# Update the line if needed
 							if record_changed: line = self.unparse_data(record, self.inputs["delim"], self.inputs["enclose"], self.inputs["escape"])
@@ -714,18 +714,18 @@ class BasicAction(Action):
 						if headers: headers = False
 						
 						if self.inputs["action"] == "head":
-							self.progress("Record: " + str(i), started, i, self.inputs["lines"] * len(self.inputs["input"]))
+							self.progress("Record: {}".format(i), started, i, self.inputs["lines"] * len(self.inputs["input"]))
 						else:
-							self.progress("Record: " + str(i), started, b, total_bytes)
+							self.progress("Record: {}".format(i), started, b, total_bytes)
 				finally:
 					if f_out != sys.stdout: f_out.close()
 			finally:
 				if f_in != sys.stdin: f_in.close()
-				if in_place: shutil.move(output_filename + ".tmp", output_filename)
+				if in_place: shutil.move("{}.tmp".format(output_filename), output_filename)
 				
 			f += 1
 		
-		return "Processed " + str(i) + " records sucessfully"
+		return "Processed {} records sucessfully".format(i)
 
 class FixedAction(Action):
 	"""Class to perform actions on fixed width files."""
@@ -777,7 +777,7 @@ class FixedAction(Action):
 								record = self.parse_fixed(line, fixed_map, fixed_length, j)
 								f_out.write(self.unparse_data(record, self.inputs["delim"], self.inputs["enclose"], self.inputs["escape"]) + "\n")
 							else:
-								raise Exception("Unknown action: " + self.inputs["action"])
+								raise Exception("Unknown action: {}".format(self.inputs["action"]))
 							
 							if not headers:
 								j += 1
@@ -785,21 +785,21 @@ class FixedAction(Action):
 						
 						if headers: headers = False
 						
-						self.progress("Record: " + str(i), started, b, total_bytes)
+						self.progress("Record: {}".format(i), started, b, total_bytes)
 				finally:
 					if f_out != sys.stdout: f_out.close()
 			finally:
 				if f_in != sys.stdin: f_in.close()
-				if in_place: shutil.move(output_filename + ".tmp", output_filename)
+				if in_place: shutil.move("{}.tmp".format(output_filename), output_filename)
 				
 			f += 1
 		
-		return "Processed " + str(i) + " records sucessfully"
+		return "Processed {} records sucessfully".format(i)
 		
 	def parse_fixed(self, line, fixed_map, fixed_length, i):
 		"""Parse a fixed-length string into a list and return the result."""
 		
-		if len(line) != fixed_length: raise Exception("Line #" + str(i) + " is not the required " + str(fixed_length) + " characters long. It is " + str(len(line)) + " characters long.")
+		if len(line) != fixed_length: raise Exception("Line #{} is not the required {} characters long. It is {} characters long.".format(i+1, fixed_length, len(line)))
 		
 		record = []
 		position = 0
@@ -853,7 +853,7 @@ class SplitAction(Action):
 						# Column error checking
 						c = self.inputs["column"]
 						if isinstance(c, int) and (c > len(record)):
-							raise Exception("Column #" + str(c+1) + " does not exist on line " + str(j+1) + " of " + input_filename)
+							raise Exception("Column #{} does not exist on line {} of '{}'".format(c+1, j+1, input_filename))
 					
 					# Save the header
 					if headers and (j == 0): header_line = line
@@ -871,7 +871,7 @@ class SplitAction(Action):
 							if tmp == "": tmp = "BLANK"
 							output_filename_record = dirname + name + "-" + tmp + ext
 						else:
-							raise Exception("Unknown action: " + self.inputs["action"])
+							raise Exception("Unknown action: {}".format(self.inputs["action"]))
 						
 						# Open the output file if needed
 						if (output_filename_current is None) or (output_filename_current != output_filename_record):
@@ -894,7 +894,7 @@ class SplitAction(Action):
 						j += 1
 						i += 1
 						
-						self.progress("Record: " + str(i), started, b, total_bytes)
+						self.progress("Record: {}".format(i), started, b, total_bytes)
 					else:
 						headers = False
 			finally:
@@ -903,7 +903,7 @@ class SplitAction(Action):
 				
 			f += 1
 		
-		return "Processed " + str(i) + " records sucessfully"
+		return "Processed {} records sucessfully".format(i)
 
 class DataReader:
 	"""Iterator for files that removes line endings and skips blank lines."""
@@ -932,12 +932,12 @@ class Configuration(BaseConfiguration):
 	def validate(self):
 		"""Raise an exception if any configuration values are invalid."""
 		
-		errors = ""
+		errors = []
 		
 		start_folder = self.conf.get("start-folder", "")
-		if (start_folder != "") and not os.path.isdir(os.path.normpath(start_folder)): errors += start_folder +" is not a valid directory\n"
+		if (start_folder != "") and not os.path.isdir(os.path.normpath(start_folder)): errors.append("'{}' is not a valid directory.".format(start_folder))
 		
-		if errors != "": raise Exception("The following errors occurred when parsing " + self.filename + "\n\n" + errors)
+		if errors: raise Exception("The following errors occurred when parsing {}:\n{}".format(self.filename, "\n".join(errors)))
 
 class CLI(BaseCLI):
 	"""Class for defining the command line interface."""
@@ -1010,8 +1010,8 @@ class CLI(BaseCLI):
 		print("")
 		
 		print("  filter - filter records based on a column's value")
-		print("    dart -a filter --column 1 --pattern " + q + "^A" + q + " -i a.csv -o b.csv")
-		print("    dart -a filter --column 1 --pattern " + q + "^A" + q + " -i a.csv -o b.csv --invert")
+		print("    dart -a filter --column 1 --pattern {q}^A{q} -i a.csv -o b.csv".format(q=q))
+		print("    dart -a filter --column 1 --pattern {q}^A{q} -i a.csv -o b.csv --invert".format(q=q))
 		print("")
 		
 		print("  fixed-to-delim - covert a fixed width file to a delimited file")
@@ -1032,7 +1032,7 @@ class CLI(BaseCLI):
 		print("")
 		
 		print("  replace-pattern - replace a pattern in a column with another")
-		print("    dart -a replace-pattern --column 1 --find " + q + "f(.*)" + q + " --replace " + q + "b\\1" + q + " -i a.csv " + continue_char + "\n      -o b.csv")
+		print("    dart -a replace-pattern --column 1 --find {q}f(.*){q} --replace {q}b\\1{q} -i a.csv {continue_char}\n      -o b.csv".format(q=q, continue_char=continue_char))
 		print("")
 		
 		print("  replace-value - replace a value in a column with another")
