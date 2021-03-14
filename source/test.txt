@@ -2,26 +2,26 @@
 
 ./dart.py --help
 ./dart.py --action combine         --input test-files/input-combine-*.csv       --output test-files/output-combine.csv         --headers
-./dart.py --action filter          --input test-files/input-filter.csv          --output test-files/output-filter1.csv         --headers --column 0 --pattern "(e|y)$"
-./dart.py --action filter          --input test-files/input-filter.csv          --output test-files/output-filter2.csv         --headers --column 0 --pattern "(e|y)$" --invert
+./dart.py --action filter          --input test-files/input-filter.csv          --output test-files/output-filter1.csv         --headers --column 1 --pattern "(e|y)$"
+./dart.py --action filter          --input test-files/input-filter.csv          --output test-files/output-filter2.csv         --headers --column 1 --pattern "(e|y)$" --invert
 ./dart.py --action head            --input test-files/input-head.csv            --output test-files/output-head.csv            --headers --lines 10
 ./dart.py --action remove-columns  --input test-files/input-remove-columns.csv  --output test-files/output-remove-columns.csv  --headers --columns 1,3,7
 ./dart.py --action remove-columns  --input test-files/input-remove-columns.csv  --output test-files/output-remove-columns.csv  --headers --columns 1,3,7 --invert
 ./dart.py --action repair          --input test-files/input-repair.csv          --output test-files/output-repair.csv          --headers
-./dart.py --action replace-value   --input test-files/input-replace-value.csv   --output test-files/output-replace-value.csv   --headers --column 4 --find "\N" --replace 0
-./dart.py --action replace-pattern --input test-files/input-replace-pattern.csv --output test-files/output-replace-pattern.csv --headers --column 10 --find '(\d{2})/(\d{2})/(\d{4})' --replace '\3-\1-\2'
+./dart.py --action replace-value   --input test-files/input-replace-value.csv   --output test-files/output-replace-value.csv   --headers --column 5 --find "\N" --replace 0
+./dart.py --action replace-pattern --input test-files/input-replace-pattern.csv --output test-files/output-replace-pattern.csv --headers --column 11 --find '(\d{2})/(\d{2})/(\d{4})' --replace '\3-\1-\2'
 
 ./dart.py --action delim-to-fixed --input test-files/input-delim-to-fixed.csv --output test-files/output-delim-to-fixed.txt --definition test-files/fixed.def
 ./dart.py --action fixed-to-delim --input test-files/input-fixed-to-delim.txt --output test-files/output-fixed-to-delim.csv --definition test-files/fixed.def
 
 ./dart.py --action split-lines --input test-files/split-lines.csv --headers --lines 10
-./dart.py --action split-value --input test-files/split-value.csv --headers --column 10
+./dart.py --action split-value --input test-files/split-value.csv --headers --column 11
 
 ./dart.py --action analyze    --input test-files/input-analyze.csv    --output test-files/output-analyze.csv    --headers
 ./dart.py --action sql-import --input test-files/input-sql-import.csv --output test-files/output-sql-import.sql --headers
 
 ./dart.py --action repair --input test-files/input-tab-delim.txt  --output test-files/output-tab-delim.txt --headers --delim '\t' --enclose ''
 
-echo "foobar" | ./dart.py --action repair --quiet
+echo "foo,bar" | ./dart.py --action repair --quiet
 
 ./dart.py

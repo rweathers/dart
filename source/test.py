@@ -60,7 +60,7 @@ def test_filter(inputs):
 	
 	inputs.update({
 		"action" :"filter",
-		"column" :0,
+		"column" :1,
 		"pattern":"foo",
 		"input"  :["/tmp/test-input-file1.csv", "/tmp/test-input-file2.csv", "/tmp/test-input-file3.csv"]
 	})
@@ -134,7 +134,7 @@ def test_remove_columns(inputs):
 	
 	inputs.update({
 		"action" :"remove-columns",
-		"columns":"0,2-4",
+		"columns":"1,3-5",
 		"input"  :["/tmp/test-input-file1.csv", "/tmp/test-input-file2.csv", "/tmp/test-input-file3.csv"]
 	})
 	
@@ -205,7 +205,7 @@ def test_replace_pattern(inputs):
 	
 	inputs.update({
 		"action" :"replace-pattern",
-		"column" :0,
+		"column" :1,
 		"find"   :"f.*",
 		"replace":"bar",
 		"input"  :["/tmp/test-input-file1.csv", "/tmp/test-input-file2.csv", "/tmp/test-input-file3.csv"]
@@ -239,7 +239,7 @@ def test_replace_value(inputs):
 	
 	inputs.update({
 		"action" :"replace-value",
-		"column" :0,
+		"column" :1,
 		"find"   :"foo",
 		"replace":"bar",
 		"input"  :["/tmp/test-input-file1.csv", "/tmp/test-input-file2.csv", "/tmp/test-input-file3.csv"]
@@ -379,7 +379,7 @@ def test_split_value(inputs):
 	
 	inputs.update({
 		"action":"split-value",
-		"column":0,
+		"column":1,
 		"input" :"/tmp/test-input-file.csv"
 	})
 	

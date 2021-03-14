@@ -54,14 +54,14 @@ class Action(BaseAction):
 		# Standardize action name
 		self.inputs["action"] = self.inputs["action"].lower().replace(" ", "-")
 		
-		# Convert column to int
+		# Convert column to int and change to zero-based
 		if self.inputs["action"] in ["filter", "replace-pattern", "replace-value", "split-value"]:
 			try:
-				self.inputs["column"] = int(self.inputs["column"])
+				self.inputs["column"] = int(self.inputs["column"]) - 1
 			except ValueError as e:
 				pass
 			
-		# Convert columns to a list of ints
+		# Convert columns to a list of ints and change to zero-based
 		if self.inputs["action"] in ["remove-columns"]:
 			try:
 				self.inputs["columns"] = self.inputs["columns"].replace(" ", "")
@@ -73,9 +73,9 @@ class Action(BaseAction):
 					for i in range(len(columns)):
 						if "-" in columns[i]:
 							(x, y) = columns[i].split("-")
-							for j in range(int(x), int(y)+1): self.inputs["columns"].append(j)
+							for j in range(int(x)-1, int(y)): self.inputs["columns"].append(j)
 						else:
-							self.inputs["columns"].append(int(columns[i]))
+							self.inputs["columns"].append(int(columns[i])-1)
 					self.inputs["columns"].sort(reverse=True)
 			except ValueError as e:
 				self.inputs["columns"] = None
@@ -107,7 +107,7 @@ class Action(BaseAction):
 				if not isinstance(self.inputs["column"], int): raise Exception()
 				if self.inputs["column"] < 0: raise Exception()
 			except Exception as e:
-				message += "column must be an non-negative integer\n"
+				message += "column must be a positive integer\n"
 			
 		# Validate columns
 		if self.inputs["action"] in ["remove-columns"]:
@@ -116,7 +116,7 @@ class Action(BaseAction):
 				for i in self.inputs["columns"]:
 					if i < 0: raise Exception()
 			except Exception as e:
-				message += "columns must be a comma separated list of non-negative integers\n"
+				message += "columns must be a comma separated list of positive integers\n"
 		
 		# Validate lines
 		if self.inputs["action"] in ["analyze", "sql-import"]:
@@ -671,7 +671,7 @@ class BasicAction(Action):
 								if isinstance(self.inputs["column"], int): columns.append(self.inputs["column"])
 								for c in columns:
 									if c > len(record):
-										raise Exception("Column #" + str(c) + " does not exist on line " + str(j+1) + " of " + input_filename)
+										raise Exception("Column #" + str(c+1) + " does not exist on line " + str(j+1) + " of " + input_filename)
 							
 							# Process the record
 							record_changed = False
@@ -853,7 +853,7 @@ class SplitAction(Action):
 						# Column error checking
 						c = self.inputs["column"]
 						if isinstance(c, int) and (c > len(record)):
-							raise Exception("Column #" + str(c) + " does not exist on line " + str(j+1) + " of " + input_filename)
+							raise Exception("Column #" + str(c+1) + " does not exist on line " + str(j+1) + " of " + input_filename)
 					
 					# Save the header
 					if headers and (j == 0): header_line = line
@@ -953,8 +953,8 @@ class CLI(BaseCLI):
 			("verbose"   , "v", "Enable verbose output\n"              , "boolean"),
 			
 			("action"    , "a", "Action to perform (see below)"        , "value"),
-			("column"    , "" , "Column index, starting a 0"           , "value"),
-			("columns"   , "" , "Column indexes, starting at 0 (1)"    , "value"),
+			("column"    , "" , "Column number, starting at 1"         , "value"),
+			("columns"   , "" , "Column numbers, starting at 1 (1)"    , "value"),
 			("definition", "" , "Fixed width definition file (2)"      , "value"),
 			("find"      , "" , "Value/pattern to find"                , "value"),
 			("replace"   , "" , "Replacement value/pattern"            , "value"),
@@ -1010,8 +1010,8 @@ class CLI(BaseCLI):
 		print("")
 		
 		print("  filter - filter records based on a column's value")
-		print("    dart -a filter --column 0 --pattern " + q + "^A" + q + " -i a.csv -o b.csv")
-		print("    dart -a filter --column 0 --pattern " + q + "^A" + q + " -i a.csv -o b.csv --invert")
+		print("    dart -a filter --column 1 --pattern " + q + "^A" + q + " -i a.csv -o b.csv")
+		print("    dart -a filter --column 1 --pattern " + q + "^A" + q + " -i a.csv -o b.csv --invert")
 		print("")
 		
 		print("  fixed-to-delim - covert a fixed width file to a delimited file")
@@ -1032,11 +1032,11 @@ class CLI(BaseCLI):
 		print("")
 		
 		print("  replace-pattern - replace a pattern in a column with another")
-		print("    dart -a replace-pattern --column 0 --find " + q + "f(.*)" + q + " --replace " + q + "b\\1" + q + " -i a.csv " + continue_char + "\n      -o b.csv")
+		print("    dart -a replace-pattern --column 1 --find " + q + "f(.*)" + q + " --replace " + q + "b\\1" + q + " -i a.csv " + continue_char + "\n      -o b.csv")
 		print("")
 		
 		print("  replace-value - replace a value in a column with another")
-		print("    dart -a replace-value --column 0 --find foo --replace bar -i a.csv -o b.csv")
+		print("    dart -a replace-value --column 1 --find foo --replace bar -i a.csv -o b.csv")
 		print("")
 		
 		print("  split-lines - split one file into many based on number of lines")
@@ -1044,7 +1044,7 @@ class CLI(BaseCLI):
 		print("")
 		
 		print("  split-value - split one file into many based on a column's value")
-		print("    dart -a split-value --column 0 -i a.csv")
+		print("    dart -a split-value --column 1 -i a.csv")
 		print("")
 		
 		print("  sql-import - create SQL CREATE TABLE and LOAD DATA statements")
@@ -1107,8 +1107,8 @@ class GUI(BaseGUI):
 """, "normal")
 		
 		help.insert(tk.END, "Action Options\n\n", "italic")
-		help.insert(tk.END, """ \u2022 Column - column index, starting at 0
- \u2022 Columns - column indexes, starting at 0, separate with commas, you can also use ranges, i.e.: 1,3-5
+		help.insert(tk.END, """ \u2022 Column - column number, starting at 1
+ \u2022 Columns - column numbers, starting at 1, separate with commas, you can also use ranges, i.e.: 1,3-5
  \u2022 Definition - fixed width definition file, containing the lengths of each column, one per line
  \u2022 Find - value/pattern to find
  \u2022 Replace - replacement value/pattern
