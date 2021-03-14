@@ -124,7 +124,7 @@ class Action(BaseAction):
 				if not isinstance(self.inputs["lines"], int): raise Exception()
 				if self.inputs["lines"] < 0: raise Exception()
 			except Exception as e:
-				errors.append("If supplied, lines must be a non-negative integer.")
+				errors.append("If supplied, lines must be a positive integer.")
 		elif self.inputs["action"] in ["head", "split-lines"]:
 			try:
 				if not isinstance(self.inputs["lines"], int): raise Exception()
