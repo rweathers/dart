@@ -283,10 +283,10 @@ class AnalyzeAction(Action):
 								"integer-avg":0,
 								"integer-max":None,
 								
-								"float":True,
-								"float-min":None,
-								"float-avg":0.0,
-								"float-max":None,
+								"decimal":True,
+								"decimal-min":None,
+								"decimal-avg":0.0,
+								"decimal-max":None,
 								
 								"date":True,
 								"date-format":None,
@@ -305,7 +305,8 @@ class AnalyzeAction(Action):
 								
 								"boolean":True,
 								
-								"blanks":0,
+								"empty":0,
+								"null":0,
 								
 								"values":{}
 							}
@@ -316,7 +317,11 @@ class AnalyzeAction(Action):
 					if not headers:
 						k = 0
 						for value in record:
-							if (value != "") and (value != "\\N"):
+							if value == "":
+								fields[k]["empty"] += 1
+							elif (value == "NULL") or (value == "\\N"):
+								fields[k]["null"] += 1
+							else:
 								d = fields[k]
 								d["length-min"] = len(value) if d["length-min"] is None else min(len(value), d["length-min"])
 								d["length-avg"] += len(value)
@@ -337,16 +342,16 @@ class AnalyzeAction(Action):
 									except Exception as e:
 										d["integer"] = False
 								
-								if d["float"]:
+								if d["decimal"]:
 									try:
 										if re.search("^0[^\\.]", value): raise Exception()
 										
 										val = float(value)
-										d["float-min"] = val if d["float-min"] is None else min(val, d["float-min"])
-										d["float-avg"] += val
-										d["float-max"] = val if d["float-max"] is None else max(val, d["float-max"])
+										d["decimal-min"] = val if d["decimal-min"] is None else min(val, d["decimal-min"])
+										d["decimal-avg"] += val
+										d["decimal-max"] = val if d["decimal-max"] is None else max(val, d["decimal-max"])
 									except Exception as e:
-										d["float"] = False
+										d["decimal"] = False
 								
 								def dt_helper(key, formats):
 									if d[key]:
@@ -378,9 +383,6 @@ class AnalyzeAction(Action):
 								
 								if value not in d["values"]: d["values"][value] = 0
 								d["values"][value] += 1
-								
-							else:
-								fields[k]["blanks"] += 1
 							
 							k += 1
 					
@@ -399,15 +401,15 @@ class AnalyzeAction(Action):
 					else:
 						self.progress("Record: {}".format(i), started, b, total_bytes)
 					
-				# Clean up blank fields
+				# Clean up entirely empty fields
 				for field in fields:
-					if field["blanks"] == j:
+					if (field["empty"] + field["null"]) == j:
 						field["length-min"] = 0
 						field["length-max"] = 0
 						field["text-min"] = ""
 						field["text-max"] = ""
 						field["integer"] = False
-						field["float"] = False
+						field["decimal"] = False
 						field["date"] = False
 						field["time"] = False
 						field["datetime"] = False
@@ -429,7 +431,7 @@ class AnalyzeAction(Action):
 						["Minimum Value"],
 						["Average Value"],
 						["Maximum Value"],
-						["Blank Values"],
+						["Empty Values"],
 						["Distinct Values"],
 						["Total Values"]
 					]
@@ -446,7 +448,7 @@ class AnalyzeAction(Action):
 							data[x].append("Boolean")
 						elif field["integer"]:
 							data[x].append("Integer")
-						elif field["float"]:
+						elif field["decimal"]:
 							data[x].append("Decimal")
 						elif field["date"]:
 							data[x].append("Date")
@@ -463,7 +465,7 @@ class AnalyzeAction(Action):
 						x += 1
 						
 						# Average Length
-						data[x].append(0 if (j - field["blanks"]) == 0 else round(field["length-avg"]/(j - field["blanks"]), 1))
+						data[x].append(0 if (j - field["empty"] - field["null"]) == 0 else round(field["length-avg"]/(j - field["empty"] - field["null"]), 1))
 						x += 1
 						
 						# Maximum Length
@@ -476,23 +478,23 @@ class AnalyzeAction(Action):
 							x += 1
 							
 							# Average Value
-							data[x].append("" if (j - field["blanks"]) == 0 else round(field["integer-avg"]/(j - field["blanks"]), 1))
+							data[x].append("" if (j - field["empty"] - field["null"]) == 0 else round(field["integer-avg"]/(j - field["empty"] - field["null"]), 1))
 							x += 1
 							
 							# Maximum Value
 							data[x].append(field["integer-max"])
 							x += 1
-						elif field["float"]:
+						elif field["decimal"]:
 							# Minimum Value
-							data[x].append(field["float-min"])
+							data[x].append(field["decimal-min"])
 							x += 1
 							
 							# Average Value
-							data[x].append(field["float-avg"]/j)
+							data[x].append(field["decimal-avg"]/j)
 							x += 1
 							
 							# Maximum Value
-							data[x].append(field["float-max"])
+							data[x].append(field["decimal-max"])
 							x += 1
 						elif field["date"]:
 							# Minimum Value
@@ -543,12 +545,12 @@ class AnalyzeAction(Action):
 							data[x].append(field["text-max"])
 							x += 1
 						
-						# Blank Values
-						data[x].append(field["blanks"])
+						# Empty Values
+						data[x].append(field["empty"] + field["null"])
 						x += 1
 						
 						# Distinct Values
-						data[x].append(len(field["values"]))
+						data[x].append(len(field["values"]) + int(field["empty"] > 0) + int(field["null"] > 0))
 						x += 1
 						
 						# Total Values
@@ -565,6 +567,9 @@ class AnalyzeAction(Action):
 						table_name = re.sub("[ -]+", "_", table_name)
 						table_name = re.sub("[^A-Za-z0-9_]+", "", table_name)
 					
+					# Integer storage bits
+					integer_storage_bits = {"TINYINT":8, "SMALLINT":16, "MEDIUMINT":24, "INT":32, "BITINT":64}
+					
 					# Create column definitions
 					columns = []
 					for field in fields:
@@ -572,32 +577,52 @@ class AnalyzeAction(Action):
 						column_name = re.sub("[ -]+", "_", column_name)
 						column_name = re.sub("[^A-Za-z0-9_]+", "", column_name)
 						
-						null = "NULL" if field["blanks"] > 0 else "NOT NULL"
-								
+						null = "NULL" if field["null"] > 0 else "NOT NULL"
+						
 						datatype = None
-						if (field["date"]) and (field["date-format"] == "%Y-%m-%d"):
+						if (field["boolean"]) and (sorted(list(field["values"].keys())) in [["0"], ["1"], ["0", "1"]]):
+							datatype = "TINYINT UNSIGNED"
+						elif (field["date"]) and (field["date-format"] == "%Y-%m-%d"):
 							datatype = "DATE"
 						elif (field["datetime"]) and ((field["datetime-format"] == "%Y-%m-%d %H:%M") or (field["datetime-format"] == "%Y-%m-%d %H:%M:%S")):
-								datatype = "DATETIME"
+							datatype = "DATETIME"
 						elif (field["time"]) and ((field["time-format"] == "%H:%M") or (field["time-format"] == "%H:%M:%S")):
 							datatype = "TIME"
 						elif (field["length-min"] > 0) and (field["length-min"] == field["length-max"]):
 							datatype = "CHAR({})".format(field["length-min"])
 						elif field["integer"]:
-							 datatype = "INT"
-						elif field["float"]:
-							datatype = "FLOAT"
-						else:
+							for inttype in integer_storage_bits:
+								bits = integer_storage_bits[inttype]
+								extra = ""
+								minval = None
+								maxval = None
+								if field["integer-min"] < 0:
+									minval = (-2)**(bits - 1)
+									maxval = (2**(bits - 1)) - 1
+								else:
+									extra = " UNSIGNED"
+									minval = 0
+									maxval = (2**bits) - 1
+								if (field["integer-min"] >= minval) and (field["integer-max"] <= maxval):
+									datatype = inttype + extra
+									break
+						elif field["decimal"]:
+							datatype = "DECIMAL"
+						
+						if datatype is None:
 							length = field["length-max"]
-							if length <= 10: length = 10
-							elif length <= 25: length = 25
-							elif length <= 50: length = 50
-							elif length <= 100: length = 100
-							elif length <= 255: length = 255
-							else: length = 1024
-							datatype = "VARCHAR({})".format(length)
-							
-						columns.append("\t{} {} {}".format(column_name, datatype, null))
+							if length > 1024:
+								datatype = "TEXT"
+							else:
+								if length <= 10: length = 10
+								elif length <= 25: length = 25
+								elif length <= 50: length = 50
+								elif length <= 100: length = 100
+								elif length <= 255: length = 255
+								else: length = 1024
+								datatype = "VARCHAR({})".format(length)
+						
+						columns.append("\t`{}` {} {}".format(column_name, datatype, null))
 						
 					# Create full SQL
 					def escape(s):

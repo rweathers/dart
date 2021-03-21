@@ -435,8 +435,8 @@ def test_analyze(inputs):
 			"Minimum Value","Alice","foobar","01234","123","123.0","07/16/17","13:00","2017-07-16 15:00:00","0"
 			"Average Value","","","","123.0","123.225","","","","0.5"
 			"Maximum Value","Bob","foobar","12345","123","123.45","07/17/17","14:00","2017-07-16 16:00:00","1"
-			"Blank Values","0","1","0","0","0","0","0","0","0"
-			"Distinct Values","2","1","2","1","2","2","2","2","2"
+			"Empty Values","0","1","0","0","0","0","0","0","0"
+			"Distinct Values","2","2","2","1","2","2","2","2","2"
 			"Total Values","2","2","2","2","2","2","2","2","2"
 		''')
 		
@@ -469,23 +469,23 @@ def test_sql_import(inputs):
 		
 		contents_input = cleandoc('''
 			Alice,foobar,01234,123,123,07/16/17,13:00,2017-07-16 15:00:00,1
-			Bob,,12345,123,123.45,07/17/17,14:00,2017-07-16 16:00:00,0
+			Bob,\\N,12345,-123,123.45,07/17/17,14:00,2017-07-16 16:00:00,0
 		''')
-
+		
 		contents_output = None
 		if inputs["headers"]:
 			contents_input = "Name,Text,Zip,Integer,Decimal,Date,Time,Date/Time,Boolean\n" + contents_input
 			contents_output = cleandoc('''
 				CREATE TABLE test_input_file1(
-					name VARCHAR(10) NOT NULL,
-					text CHAR(6) NULL,
-					zip CHAR(5) NOT NULL,
-					integer CHAR(3) NOT NULL,
-					decimal FLOAT NOT NULL,
-					date CHAR(8) NOT NULL,
-					time TIME NOT NULL,
-					datetime DATETIME NOT NULL,
-					boolean CHAR(1) NOT NULL
+					`name` VARCHAR(10) NOT NULL,
+					`text` CHAR(6) NULL,
+					`zip` CHAR(5) NOT NULL,
+					`integer` TINYINT NOT NULL,
+					`decimal` DECIMAL NOT NULL,
+					`date` CHAR(8) NOT NULL,
+					`time` TIME NOT NULL,
+					`datetime` DATETIME NOT NULL,
+					`boolean` TINYINT UNSIGNED NOT NULL
 				);
 				
 				LOAD DATA INFILE '/tmp/test-input-file1.csv' IGNORE INTO TABLE test_input_file1 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' LINES TERMINATED BY '\\n' IGNORE 1 LINES;
@@ -493,15 +493,15 @@ def test_sql_import(inputs):
 		else:
 			contents_output = cleandoc('''
 				CREATE TABLE test_input_file1(
-					field_0 VARCHAR(10) NOT NULL,
-					field_1 CHAR(6) NULL,
-					field_2 CHAR(5) NOT NULL,
-					field_3 CHAR(3) NOT NULL,
-					field_4 FLOAT NOT NULL,
-					field_5 CHAR(8) NOT NULL,
-					field_6 TIME NOT NULL,
-					field_7 DATETIME NOT NULL,
-					field_8 CHAR(1) NOT NULL
+					`field_0` VARCHAR(10) NOT NULL,
+					`field_1` CHAR(6) NULL,
+					`field_2` CHAR(5) NOT NULL,
+					`field_3` TINYINT NOT NULL,
+					`field_4` DECIMAL NOT NULL,
+					`field_5` CHAR(8) NOT NULL,
+					`field_6` TIME NOT NULL,
+					`field_7` DATETIME NOT NULL,
+					`field_8` TINYINT UNSIGNED NOT NULL
 				);
 				
 				LOAD DATA INFILE '/tmp/test-input-file1.csv' IGNORE INTO TABLE test_input_file1 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' LINES TERMINATED BY '\\n';
