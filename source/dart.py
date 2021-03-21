@@ -1101,7 +1101,7 @@ class GUI(BaseGUI):
 		
 		self.menu = {
 			"File":{"Exit":self.quit},
-			"Edit":{"Reset":self.set_defaults},
+			"Edit":{"Reset":self.reset},
 			"Settings":{"Open Config File":self.open_config},
 			"Help":{"Help":self.show_help, "About":self.show_about}
 		}
@@ -1224,7 +1224,7 @@ class GUI(BaseGUI):
 		self.create_button  (self, "submit", "Submit", self.action)
 		
 		self.disable_widgets()
-		self.widgets["action"].config(state = tk.NORMAL)
+		self.widgets["action"].config(state = "readonly")
 
 	def get_action(self, inputs):
 		"""Return the BaseAction subclass to use."""
@@ -1243,6 +1243,6 @@ class GUI(BaseGUI):
 		
 		self.set_defaults()
 		self.disable_widgets()
-		self.widgets["action"].config(state = tk.NORMAL)
+		self.widgets["action"].config(state = "readonly")
 
 if __name__ == "__main__": main(program, Configuration, CLI, GUI)
