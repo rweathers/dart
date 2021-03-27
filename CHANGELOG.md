@@ -17,3 +17,10 @@ Fixed handling of tab delimited files.
 Removed Uncombine action.  
 Removed original filename from Combine.  
 Removed unnecessary parsing and unparsing of data.
+
+## 0.5.0-beta (2021.03-27)
+
+Changed column and columns to 1-based.  
+Improved SQL field handling.  
+Improved blank/NULL handling.  
+Double-clicking a text field opens file or folder if applicable.

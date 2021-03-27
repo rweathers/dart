@@ -1,3 +1,10 @@
+dart (0.5.0-beta) stable; urgency=low
+  * Changed column and columns to 1-based.
+  * Improved SQL field handling.
+  * Improved blank/NULL handling.
+  * Double-clicking a text field opens file or folder if applicable.
+ -- Ryan Weathers <ryanweathers63@gmail.com>  Sat, 27 Mar 2021 11:00:00 -0400
+
 dart (0.4.0-beta) stable; urgency=low
   * Removed Uncombine action.
   * Removed original filename from Combine.
