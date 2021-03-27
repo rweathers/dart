@@ -23,6 +23,7 @@
 #############################################################################################################################
 
 import os
+import tempfile
 from datetime import datetime
 from inspect import cleandoc
 from hydra import progress
@@ -33,8 +34,8 @@ def test_combine(inputs):
 	
 	inputs.update({
 		"action":"combine",
-		"input" :["/tmp/test-input-file1.csv", "/tmp/test-input-file2.csv", "/tmp/test-input-file3.csv"],
-		"output":"/tmp/test-output.csv"
+		"input" :["{tmp}/test-input-file1.csv", "{tmp}/test-input-file2.csv", "{tmp}/test-input-file3.csv"],
+		"output":"{tmp}/test-output.csv"
 	})
 	
 	# Test with and without headers
@@ -62,7 +63,7 @@ def test_filter(inputs):
 		"action" :"filter",
 		"column" :1,
 		"pattern":"foo",
-		"input"  :["/tmp/test-input-file1.csv", "/tmp/test-input-file2.csv", "/tmp/test-input-file3.csv"]
+		"input"  :["{tmp}/test-input-file1.csv", "{tmp}/test-input-file2.csv", "{tmp}/test-input-file3.csv"]
 	})
 	
 	# Test with and without headers
@@ -71,10 +72,10 @@ def test_filter(inputs):
 		inputs["headers"] = test_val_1
 		
 		# Test single, multiple and in-place outputs
-		test_cases_2 = {"test-output.csv":"single", "{f}-out{e}":"multiple", "{f}{e}":"in-place"}
+		test_cases_2 = {"test-output.csv":"single", "{{f}}-out{{e}}":"multiple", "{{f}}{{e}}":"in-place"}
 		for test_val_2, test_desc_2 in test_cases_2.items():
-			inputs["output"] = "/tmp/" + test_val_2
-		
+			inputs["output"] = "{tmp}/" + test_val_2
+			
 			# Test without and with invert
 			test_cases_3 = {False:"not inverted", True:"inverted"}
 			for test_val_3, test_desc_3 in test_cases_3.items():
@@ -100,7 +101,7 @@ def test_head(inputs):
 	inputs.update({
 		"action":"head",
 		"lines" :5,
-		"input" :["/tmp/test-input-file1.csv", "/tmp/test-input-file2.csv", "/tmp/test-input-file3.csv"]
+		"input" :["{tmp}/test-input-file1.csv", "{tmp}/test-input-file2.csv", "{tmp}/test-input-file3.csv"]
 	})
 	
 	# Test with and without headers
@@ -109,9 +110,9 @@ def test_head(inputs):
 		inputs["headers"] = test_val_1
 		
 		# Test single, multiple and in-place outputs
-		test_cases_2 = {"test-output.csv":"single", "{f}-out{e}":"multiple", "{f}{e}":"in-place"}
+		test_cases_2 = {"test-output.csv":"single", "{{f}}-out{{e}}":"multiple", "{{f}}{{e}}":"in-place"}
 		for test_val_2, test_desc_2 in test_cases_2.items():
-			inputs["output"] = "/tmp/" + test_val_2
+			inputs["output"] = "{tmp}/" + test_val_2
 			
 			description = [inputs["action"], test_desc_1, test_desc_2]
 			
@@ -135,7 +136,7 @@ def test_remove_columns(inputs):
 	inputs.update({
 		"action" :"remove-columns",
 		"columns":"1,3-5",
-		"input"  :["/tmp/test-input-file1.csv", "/tmp/test-input-file2.csv", "/tmp/test-input-file3.csv"]
+		"input"  :["{tmp}/test-input-file1.csv", "{tmp}/test-input-file2.csv", "{tmp}/test-input-file3.csv"]
 	})
 	
 	# Test with and without headers
@@ -144,9 +145,9 @@ def test_remove_columns(inputs):
 		inputs["headers"] = test_val_1
 		
 		# Test single, multiple and in-place outputs
-		test_cases_2 = {"test-output.csv":"single", "{f}-out{e}":"multiple", "{f}{e}":"in-place"}
+		test_cases_2 = {"test-output.csv":"single", "{{f}}-out{{e}}":"multiple", "{{f}}{{e}}":"in-place"}
 		for test_val_2, test_desc_2 in test_cases_2.items():
-			inputs["output"] = "/tmp/" + test_val_2
+			inputs["output"] = "{tmp}/" + test_val_2
 		
 			# Test without and with invert
 			test_cases_3 = {False:"not inverted", True:"inverted"}
@@ -174,7 +175,7 @@ def test_repair(inputs):
 	
 	inputs.update({
 		"action":"repair",
-		"input" :["/tmp/test-input-file1.csv", "/tmp/test-input-file2.csv", "/tmp/test-input-file3.csv"]
+		"input" :["{tmp}/test-input-file1.csv", "{tmp}/test-input-file2.csv", "{tmp}/test-input-file3.csv"]
 	})
 	
 	# Test with and without headers
@@ -183,9 +184,9 @@ def test_repair(inputs):
 		inputs["headers"] = test_val_1
 		
 		# Test single, multiple and in-place outputs
-		test_cases_2 = {"test-output.csv":"single", "{f}-out{e}":"multiple", "{f}{e}":"in-place"}
+		test_cases_2 = {"test-output.csv":"single", "{{f}}-out{{e}}":"multiple", "{{f}}{{e}}":"in-place"}
 		for test_val_2, test_desc_2 in test_cases_2.items():
-			inputs["output"] = "/tmp/" + test_val_2
+			inputs["output"] = "{tmp}/" + test_val_2
 			
 			description = [inputs["action"], test_desc_1, test_desc_2]
 			
@@ -208,7 +209,7 @@ def test_replace_pattern(inputs):
 		"column" :1,
 		"find"   :"f.*",
 		"replace":"bar",
-		"input"  :["/tmp/test-input-file1.csv", "/tmp/test-input-file2.csv", "/tmp/test-input-file3.csv"]
+		"input"  :["{tmp}/test-input-file1.csv", "{tmp}/test-input-file2.csv", "{tmp}/test-input-file3.csv"]
 	})
 	
 	# Test with and without headers
@@ -217,9 +218,9 @@ def test_replace_pattern(inputs):
 		inputs["headers"] = test_val_1
 		
 		# Test single, multiple and in-place outputs
-		test_cases_2 = {"test-output.csv":"single", "{f}-out{e}":"multiple", "{f}{e}":"in-place"}
+		test_cases_2 = {"test-output.csv":"single", "{{f}}-out{{e}}":"multiple", "{{f}}{{e}}":"in-place"}
 		for test_val_2, test_desc_2 in test_cases_2.items():
-			inputs["output"] = "/tmp/" + test_val_2
+			inputs["output"] = "{tmp}/" + test_val_2
 			
 			description = [inputs["action"], test_desc_1, test_desc_2]
 			
@@ -242,7 +243,7 @@ def test_replace_value(inputs):
 		"column" :1,
 		"find"   :"foo",
 		"replace":"bar",
-		"input"  :["/tmp/test-input-file1.csv", "/tmp/test-input-file2.csv", "/tmp/test-input-file3.csv"]
+		"input"  :["{tmp}/test-input-file1.csv", "{tmp}/test-input-file2.csv", "{tmp}/test-input-file3.csv"]
 	})
 	
 	# Test with and without headers
@@ -251,9 +252,9 @@ def test_replace_value(inputs):
 		inputs["headers"] = test_val_1
 		
 		# Test single, multiple and in-place outputs
-		test_cases_2 = {"test-output.csv":"single", "{f}-out{e}":"multiple", "{f}{e}":"in-place"}
+		test_cases_2 = {"test-output.csv":"single", "{{f}}-out{{e}}":"multiple", "{{f}}{{e}}":"in-place"}
 		for test_val_2, test_desc_2 in test_cases_2.items():
-			inputs["output"] = "/tmp/" + test_val_2
+			inputs["output"] = "{tmp}/" + test_val_2
 			
 			description = [inputs["action"], test_desc_1, test_desc_2]
 			
@@ -273,10 +274,10 @@ def test_delim_to_fixed(inputs):
 	
 	inputs.update({
 		"action"    :"delim-to-fixed",
-		"definition":"/tmp/fixed.def",
-		"input"     :["/tmp/test-input-file1.csv", "/tmp/test-input-file2.csv", "/tmp/test-input-file3.csv"]
+		"definition":"{tmp}/fixed.def".format(tmp=tempfile.gettempdir()),
+		"input"     :["{tmp}/test-input-file1.csv", "{tmp}/test-input-file2.csv", "{tmp}/test-input-file3.csv"]
 	})
-		
+	
 	# Write definition file
 	writeall("8\n8\n", inputs["definition"])
 	try:
@@ -286,9 +287,9 @@ def test_delim_to_fixed(inputs):
 			inputs["headers"] = test_val_1
 			
 			# Test single, multiple and in-place outputs
-			test_cases_2 = {"test-output.csv":"single", "{f}-out{e}":"multiple", "{f}{e}":"in-place"}
+			test_cases_2 = {"test-output.csv":"single", "{{f}}-out{{e}}":"multiple", "{{f}}{{e}}":"in-place"}
 			for test_val_2, test_desc_2 in test_cases_2.items():
-				inputs["output"] = "/tmp/" + test_val_2
+				inputs["output"] = "{tmp}/" + test_val_2
 				
 				description = [inputs["action"], test_desc_1, test_desc_2]
 				
@@ -310,8 +311,8 @@ def test_fixed_to_delim(inputs):
 	
 	inputs.update({
 		"action"    :"fixed-to-delim",
-		"definition":"/tmp/fixed.def",
-		"input"     :["/tmp/test-input-file1.txt", "/tmp/test-input-file2.txt", "/tmp/test-input-file3.txt"]
+		"definition":"{tmp}/fixed.def".format(tmp=tempfile.gettempdir()),
+		"input"     :["{tmp}/test-input-file1.txt", "{tmp}/test-input-file2.txt", "{tmp}/test-input-file3.txt"]
 	})
 	
 	# Write definition file
@@ -323,9 +324,9 @@ def test_fixed_to_delim(inputs):
 			inputs["headers"] = test_val_1
 			
 			# Test single, multiple and in-place outputs
-			test_cases_2 = {"test-output.csv":"single", "{f}-out{e}":"multiple", "{f}{e}":"in-place"}
+			test_cases_2 = {"test-output.csv":"single", "{{f}}-out{{e}}":"multiple", "{{f}}{{e}}":"in-place"}
 			for test_val_2, test_desc_2 in test_cases_2.items():
-				inputs["output"] = "/tmp/" + test_val_2
+				inputs["output"] = "{tmp}/" + test_val_2
 				
 				description = [inputs["action"], test_desc_1, test_desc_2]
 				
@@ -348,7 +349,7 @@ def test_split_lines(inputs):
 	inputs.update({
 		"action":"split-lines",
 		"lines" :2,
-		"input" :"/tmp/test-input-file.csv"
+		"input" :"{tmp}/test-input-file.csv"
 	})
 	
 	# Test with and without headers
@@ -368,7 +369,7 @@ def test_split_lines(inputs):
 			contents_output = h + contents_output
 		
 		contents_outputs = {}
-		for i in range(1, int(rows/inputs["lines"])+1): contents_outputs["/tmp/test-input-file-{}.csv".format(i)] = contents_output
+		for i in range(1, int(rows/inputs["lines"])+1): contents_outputs["{{tmp}}/test-input-file-{}.csv".format(i)] = contents_output
 		
 		message = "Processed 10 records sucessfully"
 		
@@ -380,7 +381,7 @@ def test_split_value(inputs):
 	inputs.update({
 		"action":"split-value",
 		"column":1,
-		"input" :"/tmp/test-input-file.csv"
+		"input" :"{tmp}/test-input-file.csv"
 	})
 	
 	# Test with and without headers
@@ -393,13 +394,13 @@ def test_split_value(inputs):
 		rows = 5
 		contents_input = "foo,bar\nbar,foo\n" * rows
 		contents_outputs = {}
-		contents_outputs["/tmp/test-input-file-foo.csv"] = 'foo,bar\n' * rows
-		contents_outputs["/tmp/test-input-file-bar.csv"] = 'bar,foo\n' * rows
+		contents_outputs["{tmp}/test-input-file-foo.csv"] = 'foo,bar\n' * rows
+		contents_outputs["{tmp}/test-input-file-bar.csv"] = 'bar,foo\n' * rows
 		if inputs["headers"]:
 			h = "field1,field2\n"
 			contents_input = h + contents_input
-			contents_outputs["/tmp/test-input-file-foo.csv"] = h + contents_outputs["/tmp/test-input-file-foo.csv"]
-			contents_outputs["/tmp/test-input-file-bar.csv"] = h + contents_outputs["/tmp/test-input-file-bar.csv"]
+			contents_outputs["{tmp}/test-input-file-foo.csv"] = h + contents_outputs["{tmp}/test-input-file-foo.csv"]
+			contents_outputs["{tmp}/test-input-file-bar.csv"] = h + contents_outputs["{tmp}/test-input-file-bar.csv"]
 		
 		message = "Processed 10 records sucessfully"
 		
@@ -411,8 +412,8 @@ def test_analyze(inputs):
 	inputs.update({
 		"action":"analyze",
 		"lines" :0,
-		"input" :["/tmp/test-input-file1.csv", "/tmp/test-input-file2.csv"],
-		"output":"{f}-out{e}"
+		"input" :["{tmp}/test-input-file1.csv", "{tmp}/test-input-file2.csv"],
+		"output":"{{f}}-out{{e}}"
 	})
 	
 	# Test with and without headers
@@ -456,8 +457,8 @@ def test_sql_import(inputs):
 	inputs.update({
 		"action":"sql-import",
 		"lines" :0,
-		"input" :["/tmp/test-input-file1.csv"],
-		"output":"{f}.sql"
+		"input" :["{tmp}/test-input-file1.csv"],
+		"output":"{{f}}.sql"
 	})
 	
 	# Test with and without headers
@@ -472,6 +473,8 @@ def test_sql_import(inputs):
 			Bob,\\N,12345,-123,123.45,07/17/17,14:00,2017-07-16 16:00:00,0
 		''')
 		
+		filename = "{}{}{}".format(tempfile.gettempdir(), os.sep, "test-input-file1.csv").replace("\\", "\\\\")
+		linesep = os.linesep.replace("\r", "\\r").replace("\n", "\\n")
 		contents_output = None
 		if inputs["headers"]:
 			contents_input = "Name,Text,Zip,Integer,Decimal,Date,Time,Date/Time,Boolean\n" + contents_input
@@ -488,8 +491,8 @@ def test_sql_import(inputs):
 					`boolean` TINYINT UNSIGNED NOT NULL
 				);
 				
-				LOAD DATA INFILE '/tmp/test-input-file1.csv' IGNORE INTO TABLE test_input_file1 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' LINES TERMINATED BY '\\n' IGNORE 1 LINES;
-			''').replace(" " * 8, "\t")
+				LOAD DATA INFILE '{filename}' IGNORE INTO TABLE test_input_file1 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' LINES TERMINATED BY '{linesep}' IGNORE 1 LINES;
+			''').format(filename=filename, linesep=linesep).replace(" " * 8, "\t")
 		else:
 			contents_output = cleandoc('''
 				CREATE TABLE test_input_file1(
@@ -504,8 +507,8 @@ def test_sql_import(inputs):
 					`field_8` TINYINT UNSIGNED NOT NULL
 				);
 				
-				LOAD DATA INFILE '/tmp/test-input-file1.csv' IGNORE INTO TABLE test_input_file1 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' LINES TERMINATED BY '\\n';
-			''').replace(" " * 8, "\t")
+				LOAD DATA INFILE '{filename}' IGNORE INTO TABLE test_input_file1 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' LINES TERMINATED BY '{linesep}';
+			''').format(filename=filename, linesep=linesep).replace(" " * 8, "\t")
 		
 		message = "Processed 2 records sucessfully"
 		
@@ -520,6 +523,14 @@ def test_helper(description, action, inputs, contents_input, contents_output, ex
 		
 		if "column"  not in inputs: inputs["column"]  = ""
 		if "columns" not in inputs: inputs["columns"] = ""
+		
+		inputs = inputs.copy()
+		
+		# Add tmp dir to filenames
+		tmp = []
+		for f in inputs["input"]: tmp.append(f.format(tmp=tempfile.gettempdir()))
+		inputs["input"] = tmp
+		inputs["output"] = inputs["output"].format(tmp=tempfile.gettempdir())
 		
 		# Create input files
 		for f in inputs["input"]: writeall(contents_input, f, inputs["encoding"])
@@ -569,6 +580,11 @@ def test_helper_split(description, inputs, contents_input, contents_outputs, exp
 		if "column"  not in inputs: inputs["column"]  = ""
 		if "columns" not in inputs: inputs["columns"] = ""
 		
+		inputs = inputs.copy()
+		
+		# Add tmp dir to filenames
+		inputs["input"] = inputs["input"].format(tmp=tempfile.gettempdir())
+		
 		# Create input files
 		writeall(contents_input, inputs["input"], inputs["encoding"])
 		
@@ -585,7 +601,7 @@ def test_helper_split(description, inputs, contents_input, contents_outputs, exp
 		
 		# Check the output files
 		for f in contents_outputs:
-			text = readall(f, inputs["encoding"])
+			text = readall(f.format(tmp=tempfile.gettempdir()), inputs["encoding"])
 			if text.strip() != contents_outputs[f].strip():
 				print("FAIL")
 				print("Expected output contents:")
@@ -598,7 +614,7 @@ def test_helper_split(description, inputs, contents_input, contents_outputs, exp
 	finally:
 		# Clean up test files
 		os.remove(inputs["input"])
-		for f in contents_outputs: os.remove(f)
+		for f in contents_outputs: os.remove(f.format(tmp=tempfile.gettempdir()))
 
 def print2(text):
 	"""Print the given text and leave cursor on same line."""
