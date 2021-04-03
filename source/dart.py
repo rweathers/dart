@@ -983,7 +983,7 @@ class CLI(BaseCLI):
 			("delim"     , "d", "Delimiter character"                  , "value"),
 			("enclose"   , "e", "Enclose character"                    , "value"),
 			("escape"    , "s", "Escape character"                     , "value"),
-			("encoding"  , "c", "File encoding"                        , "value"),
+			("encoding"  , "c", "File encoding (i.e., utf-8 or cp1252)", "value"),
 			("headers"   , "H", "Input contains headers"               , "boolean")
 		]
 		
@@ -1146,7 +1146,7 @@ class GUI(BaseGUI):
 		help.insert(tk.END, """ \u2022 Delimiter - delimiter character
  \u2022 Enclose - enclose character
  \u2022 Escape - escape character
- \u2022 Encoding - file encoding
+ \u2022 Encoding - file encoding (i.e., utf-8 or cp1252)
  \u2022 Headers? - input contains headers
  
  """, "normal")
