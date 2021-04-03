@@ -26,7 +26,6 @@ import os
 import tempfile
 from datetime import datetime
 from inspect import cleandoc
-from hydra import progress
 from dart import *
 
 def test_combine(inputs):
@@ -541,9 +540,7 @@ def test_helper(description, action, inputs, contents_input, contents_output, ex
 		
 		# Check the message
 		if actual_message != expected_message:
-			print("FAIL")
-			print("Expected message: " + expected_message)
-			print("Actual message: " + actual_message)
+			print("FAIL\nExpected message: {}\nActual message: {}".format(expected_message, actual_message))
 			return
 		
 		# Get the output filename(s)
@@ -559,11 +556,7 @@ def test_helper(description, action, inputs, contents_input, contents_output, ex
 		for f in outputs:
 			text = readall(f, inputs["encoding"])
 			if text.strip() != contents_output.strip():
-				print("FAIL")
-				print("Expected output contents:")
-				print(contents_output)
-				print("Actual output contents:")
-				print(text)
+				print("FAIL\nExpected output contents:\n{}\nActual output contents:\n{}".format(contents_output, text))
 				return
 		
 		print("PASS")
@@ -590,24 +583,18 @@ def test_helper_split(description, inputs, contents_input, contents_outputs, exp
 		
 		# Perform the action
 		action = SplitAction(dict(inputs))
-		message = action.execute()
+		actual_message = action.execute()
 		
 		# Check the message
-		if message != expected_message:
-			print("FAIL")
-			print("Expected message: " + expected_message)
-			print("Actual message: " + message)
+		if actual_message != expected_message:
+			print("FAIL\nExpected message: {}\nActual message: {}".format(expected_message, actual_message))
 			return
 		
 		# Check the output files
 		for f in contents_outputs:
 			text = readall(f.format(tmp=tempfile.gettempdir()), inputs["encoding"])
 			if text.strip() != contents_outputs[f].strip():
-				print("FAIL")
-				print("Expected output contents:")
-				print(contents_outputs[f])
-				print("Actual output contents:")
-				print(text)
+				print("FAIL\nExpected output contents:\n{}\nActual output contents:\n{}".format(contents_outputs[f], text))
 				return
 		
 		print("PASS")
@@ -635,7 +622,7 @@ def main():
 	try:
 		print("")
 		
-		conf = Configuration({"config":"dart.ini"})
+		conf = Configuration(program)
 		
 		test_combine(conf.conf.copy())
 		test_filter(conf.conf.copy())
@@ -657,7 +644,6 @@ def main():
 		print("")
 	except Exception as e:
 		import traceback
-		print("ERROR: " + str(e))
-		print(traceback.format_exc())
+		print("\n\n{}".format(traceback.format_exc()))
 
 main()
