@@ -1,3 +1,9 @@
+dart (0.6.0-beta) stable; urgency=low
+  * Removed some items from the config file.
+  * Fixed handling of cross-platorm line endings.
+  * Most recent folder is retained for successive file/folder dialogs.
+ -- Ryan Weathers <ryanweathers63@gmail.com>  Sat, 03 Apr 2021 12:00:00 -0400
+
 dart (0.5.0-beta) stable; urgency=low
   * Changed column and columns to 1-based.
   * Improved SQL field handling.

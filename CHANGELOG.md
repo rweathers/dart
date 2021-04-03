@@ -18,9 +18,15 @@ Removed Uncombine action.
 Removed original filename from Combine.  
 Removed unnecessary parsing and unparsing of data.
 
-## 0.5.0-beta (2021.03-27)
+## 0.5.0-beta (2021.03.27)
 
 Changed column and columns to 1-based.  
 Improved SQL field handling.  
 Improved blank/NULL handling.  
 Double-clicking a text field opens file or folder if applicable.
+
+## 0.6.0-beta (2021.04.03)
+
+Removed some items from the config file.  
+Fixed handling of cross-platorm line endings.  
+Most recent folder is retained for successive file/folder dialogs.
