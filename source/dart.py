@@ -45,6 +45,10 @@ program = {
 	"error"    :"{path}dart.err"
 }
 
+class Configuration(BaseConfiguration):
+	"""Class for loading and validating configuration files."""
+	pass
+
 class Action(BaseAction):
 	"""Base Action class."""
 	
@@ -951,19 +955,6 @@ class DataReader:
 				line = line.strip("\r\n")
 				if line != "": return line
 
-class Configuration(BaseConfiguration):
-	"""Class for loading and validating configuration files."""
-	
-	def validate(self):
-		"""Raise an exception if any configuration values are invalid."""
-		
-		errors = []
-		
-		start_folder = self.conf.get("start-folder", "")
-		if (start_folder != "") and not os.path.isdir(os.path.normpath(start_folder)): errors.append("'{}' is not a valid directory.".format(start_folder))
-		
-		if errors: raise Exception("The following errors occurred when parsing {}:\n{}".format(self.filename, "\n".join(errors)))
-
 class CLI(BaseCLI):
 	"""Class for defining the command line interface."""
 	
@@ -1155,7 +1146,7 @@ class GUI(BaseGUI):
 		help.insert(tk.END, """ \u2022 Delimiter - delimiter character
  \u2022 Enclose - enclose character
  \u2022 Escape - escape character
- \u2022 Encoding - file encoding 
+ \u2022 Encoding - file encoding
  \u2022 Headers? - input contains headers
  
  """, "normal")
@@ -1204,16 +1195,16 @@ class GUI(BaseGUI):
 		self.create_combobox(self, "action", "Action", actions)
 		self.widgets["action"].bind("<<ComboboxSelected>>", self.enable_widgets)
 		
-		self.create_entry   (self, "column"    , "Column"    , default=self.conf.get("column", ""))
-		self.create_entry   (self, "columns"   , "Columns"   , default=self.conf.get("columns", ""))
-		self.create_browse  (self, "definition", "Definition", self.get_input, initialdir=self.conf.get("start-folder", ""), filetypes=[("All Files", ".*")])
-		self.create_entry   (self, "find"      , "Find"      , default=self.conf.get("find", ""))
-		self.create_entry   (self, "replace"   , "Replace"   , default=self.conf.get("replace", ""))
-		self.create_entry   (self, "lines"     , "Lines"     , default=self.conf.get("lines", ""))
-		self.create_entry   (self, "pattern"   , "Pattern"   , default=self.conf.get("pattern", ""))
+		self.create_entry   (self, "column"    , "Column" )
+		self.create_entry   (self, "columns"   , "Columns")
+		self.create_browse  (self, "definition", "Definition", self.get_input, filetypes=[("All Files", ".*")])
+		self.create_entry   (self, "find"      , "Find"   )
+		self.create_entry   (self, "replace"   , "Replace")
+		self.create_entry   (self, "lines"     , "Lines"  )
+		self.create_entry   (self, "pattern"   , "Pattern")
 		
-		self.create_browse  (self, "input"   , "Input"    , self.get_inputs, initialdir=self.conf.get("start-folder", ""), filetypes=[("All Files", ".*")])
-		self.create_browse  (self, "output"  , "Output"   , self.get_output, initialdir=self.conf.get("start-folder", ""), filetypes=[("All Files", ".*")])
+		self.create_browse  (self, "input"   , "Input"    , self.get_inputs, filetypes=[("All Files", ".*")])
+		self.create_browse  (self, "output"  , "Output"   , self.get_output, filetypes=[("All Files", ".*")])
 		self.create_entry   (self, "delim"   , "Delimiter", default=self.conf.get("delim", ""))
 		self.create_entry   (self, "enclose" , "Enclose"  , default=self.conf.get("enclose", ""))
 		self.create_entry   (self, "escape"  , "Escape"   , default=self.conf.get("escape", ""))
