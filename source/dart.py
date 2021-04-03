@@ -245,6 +245,8 @@ class AnalyzeAction(Action):
 		b = i = f = 0
 		started = time.time()
 		for input_filename in self.inputs["input"]:
+			linesep = None
+			
 			# Get/format output filename
 			(name, ext) = os.path.splitext(os.path.basename(input_filename))
 			output_filename = self.inputs["output"].format(f=name, e=ext)
@@ -262,9 +264,11 @@ class AnalyzeAction(Action):
 			try:
 				headers = self.inputs["headers"]
 				l = 0
-				for line in DataReader(f_in):
-					b += len(line.encode(self.inputs["encoding"])) + len(os.linesep)
-
+				reader = DataReader(f_in)
+				for line in reader:
+					b += len(line.encode(self.inputs["encoding"])) + len(reader.linesep)
+					if linesep is None: linesep = reader.linesep
+					
 					# Parse the data
 					record = self.parse_data(line, self.inputs["delim"], self.inputs["enclose"], self.inputs["escape"])
 					
@@ -636,7 +640,7 @@ class AnalyzeAction(Action):
 						s = s.replace("\r", "\\r")
 						s = s.replace("\n", "\\n")
 						return s
-					parts = [table_name, ",\n".join(columns), escape(os.path.abspath(input_filename)), table_name, escape(self.inputs["delim"]), escape(self.inputs["enclose"]), escape(os.linesep), " IGNORE 1 LINES" if self.inputs["headers"] else ""]
+					parts = [table_name, ",\n".join(columns), escape(os.path.abspath(input_filename)), table_name, escape(self.inputs["delim"]), escape(self.inputs["enclose"]), escape(linesep or os.linesep), " IGNORE 1 LINES" if self.inputs["headers"] else ""]
 					results = "CREATE TABLE {}(\n{}\n);\n\nLOAD DATA INFILE '{}' IGNORE INTO TABLE {} FIELDS TERMINATED BY '{}' OPTIONALLY ENCLOSED BY '{}' LINES TERMINATED BY '{}'{};\n".format(*parts)
 				else:
 					raise Exception("Unknown action: {}".format(self.inputs["action"]))
@@ -684,8 +688,9 @@ class BasicAction(Action):
 					# Process the file
 					headers = self.inputs["headers"]
 					j = 0
-					for line in DataReader(f_in):
-						b += len(line.encode(self.inputs["encoding"])) + len(os.linesep)
+					reader = DataReader(f_in)
+					for line in reader:
+						b += len(line.encode(self.inputs["encoding"])) + len(reader.linesep)
 						
 						# Skip the header row on all files except the first one, unless each file gets its own output
 						if (f == 0) or (not headers) or inidvidual_outputs:
@@ -793,8 +798,9 @@ class FixedAction(Action):
 					# Process the file
 					headers = self.inputs["headers"]
 					j = 0
-					for line in DataReader(f_in):
-						b += len(line.encode(self.inputs["encoding"])) + len(os.linesep)
+					reader = DataReader(f_in)
+					for line in reader:
+						b += len(line.encode(self.inputs["encoding"])) + len(reader.linesep)
 						
 						# Skip the header row on all files except the first one, unless each file gets its own output
 						if (f == 0) or (not headers) or inidvidual_outputs:
@@ -871,8 +877,9 @@ class SplitAction(Action):
 				headers = self.inputs["headers"]
 				header_line = None
 				j = 0
-				for line in DataReader(f_in):
-					b += len(line.encode(self.inputs["encoding"])) + len(os.linesep)
+				reader = DataReader(f_in)
+				for line in reader:
+					b += len(line.encode(self.inputs["encoding"])) + len(reader.linesep)
 					
 					record = None
 					if self.inputs["action"] not in ["split-lines"]:
@@ -940,18 +947,24 @@ class DataReader:
 	def __init__(self, f):
 		"""Initialize the object."""
 		self.f = f
+		self.linesep = ""
 	
 	def __iter__(self):
 		"""Make the class an iterator."""
 		return self
 	
 	def __next__(self):
-		"""Return the next non-blank line."""
+		"""Return the next non-blank line and store the line separator in self.linesep."""
 		while True:
 			line = self.f.readline()
 			if line == "":
 				raise StopIteration()
 			else:
+				if line[-2:] == "\r\n": self.linesep = "\r\n"
+				elif line[-1:] == "\r": self.linesep = "\r"
+				elif line[-1:] == "\n": self.linesep = "\n"
+				else: self.linesep = ""
+				
 				line = line.strip("\r\n")
 				if line != "": return line
 

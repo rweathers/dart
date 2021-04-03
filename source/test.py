@@ -473,7 +473,6 @@ def test_sql_import(inputs):
 		''')
 		
 		filename = "{}{}{}".format(tempfile.gettempdir(), os.sep, "test-input-file1.csv").replace("\\", "\\\\")
-		linesep = os.linesep.replace("\r", "\\r").replace("\n", "\\n")
 		contents_output = None
 		if inputs["headers"]:
 			contents_input = "Name,Text,Zip,Integer,Decimal,Date,Time,Date/Time,Boolean\n" + contents_input
@@ -490,8 +489,8 @@ def test_sql_import(inputs):
 					`boolean` TINYINT UNSIGNED NOT NULL
 				);
 				
-				LOAD DATA INFILE '{filename}' IGNORE INTO TABLE test_input_file1 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' LINES TERMINATED BY '{linesep}' IGNORE 1 LINES;
-			''').format(filename=filename, linesep=linesep).replace(" " * 8, "\t")
+				LOAD DATA INFILE '{filename}' IGNORE INTO TABLE test_input_file1 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' LINES TERMINATED BY '\\n' IGNORE 1 LINES;
+			''').format(filename=filename).replace(" " * 8, "\t")
 		else:
 			contents_output = cleandoc('''
 				CREATE TABLE test_input_file1(
@@ -506,8 +505,8 @@ def test_sql_import(inputs):
 					`field_8` TINYINT UNSIGNED NOT NULL
 				);
 				
-				LOAD DATA INFILE '{filename}' IGNORE INTO TABLE test_input_file1 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' LINES TERMINATED BY '{linesep}';
-			''').format(filename=filename, linesep=linesep).replace(" " * 8, "\t")
+				LOAD DATA INFILE '{filename}' IGNORE INTO TABLE test_input_file1 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' LINES TERMINATED BY '\\n';
+			''').format(filename=filename).replace(" " * 8, "\t")
 		
 		message = "Processed 2 records sucessfully"
 		
