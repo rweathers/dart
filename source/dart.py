@@ -20,7 +20,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# Version: 0.6.0-beta (2021.04.03)
+# Version: 1.0.0 (2021.10.04)
 #############################################################################################################################
 
 import os
@@ -35,8 +35,8 @@ from hydra import *
 
 program = {
 	"name"     :"dart",
-	"version"  :"0.6.0-beta",
-	"date"     :"04/03/2021",
+	"version"  :"1.0.0",
+	"date"     :"10/04/2021",
 	"purpose"  :"Analyze and manipulate delimited data files.",
 	"url"      :"https://github.com/rweathers/dart",
 	"copyright":"Copyright © 2017, 2018, 2019, 2020, 2021 Ryan Weathers, All Rights Reserved.",

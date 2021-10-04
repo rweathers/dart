@@ -1,3 +1,7 @@
+dart (1.0.0) stable; urgency=low
+  * Stable release.
+ -- Ryan Weathers <ryanweathers63@gmail.com>  Mon, 04 Oct 2021 10:00:00 -0400
+
 dart (0.6.0-beta) stable; urgency=low
   * Removed some items from the config file.
   * Fixed handling of cross-platorm line endings.

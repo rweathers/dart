@@ -1,17 +1,17 @@
 <?xml version="1.0"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-	<Product Id="*" UpgradeCode="646577e1-8740-4d75-8d7a-8429206d2f39" Name="dart" Version="0.6.0" Manufacturer="Ryan Weathers" Language="1033">
-		<Package InstallerVersion="200" Compressed="yes" Comments="Windows Installer Package"/>
+	<Product Id="*" UpgradeCode="bbcf90bf-f963-41bf-b64a-174d03b1d708" Name="dart" Version="1.0.0" Manufacturer="Ryan Weathers" Language="1033">
+		<Package InstallerVersion="200" Compressed="yes" Comments="Windows Installer Package" Platform="x64"/>
 		<Media Id="1" Cabinet="product.cab" EmbedCab="yes"/>
 		<UIRef Id="WixUI_Minimal"/>
 		<WixVariable Id="WixUILicenseRtf" Value="license.rtf"/>
 		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed."/>
 		<Directory Id="TARGETDIR" Name="SourceDir" >
-			<Directory Id="ProgramFilesFolder">
+			<Directory Id="ProgramFiles64Folder">
 				<Directory Id="INSTALLDIR" Name="dart">
-					<Component Id="ApplicationFile1" Guid="db4b08d3-3188-4c3f-ad00-26117d40a2d5"><File Id="ApplicationFile1" Source="../exe/dart-gui.exe"/></Component>
-					<Component Id="ApplicationFile2" Guid="0d700712-9d96-4f71-b3cf-02cbeb97e81f"><File Id="ApplicationFile2" Source="../exe/dart.exe"/></Component>
-					<Component Id="ApplicationFile3" Guid="8054e208-51c2-47ac-889a-57f15bdae8aa"><File Id="ApplicationFile3" Source="../../source/dart.template.ini" Name="dart.ini"/></Component>
+					<Component Id="ApplicationFile1" Guid="db4b08d3-3188-4c3f-ad00-26117d40a2d5" Win64="yes"><File Id="ApplicationFile1" Source="../exe/dart-gui.exe"/></Component>
+					<Component Id="ApplicationFile2" Guid="0d700712-9d96-4f71-b3cf-02cbeb97e81f" Win64="yes"><File Id="ApplicationFile2" Source="../exe/dart.exe"/></Component>
+					<Component Id="ApplicationFile3" Guid="8054e208-51c2-47ac-889a-57f15bdae8aa" Win64="yes"><File Id="ApplicationFile3" Source="../../source/dart.template.ini" Name="dart.ini"/></Component>
 				</Directory>
 			</Directory>
 			<Directory Id="ProgramMenuFolder">

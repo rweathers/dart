@@ -30,3 +30,7 @@ Double-clicking a text field opens file or folder if applicable.
 Removed some items from the config file.  
 Fixed handling of cross-platorm line endings.  
 Most recent folder is retained for successive file/folder dialogs.
+
+## 1.0.0 (2021.10.04)
+
+Stable release.

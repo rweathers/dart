@@ -1,6 +1,6 @@
 #!/bin/sh -e
 
-version="0.6.0-beta"
+version="1.0.0"
 
 cd ../release
 
