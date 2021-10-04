@@ -99,7 +99,7 @@ class Action(BaseAction):
 		if self.inputs["delim"] == "\\t": self.inputs["delim"] = "\t"
 	
 	def validate(self):
-		"""Raise an exception if any of the user's inputs are invalid."""
+		"""Raise a ValueError if any of the user's inputs are invalid."""
 		
 		errors = []
 		
@@ -144,7 +144,7 @@ class Action(BaseAction):
 		
 		if self.inputs["encoding"] == "": errors.append("File encoding required.")
 		
-		if errors: raise Exception("\n".join(errors))
+		if errors: raise ValueError("\n".join(errors))
 	
 	def parse_data(self, record, delim=",", enclose="\"", escape="\""):
 		"""Parse a delimited string into a list and return it."""
@@ -252,10 +252,10 @@ class AnalyzeAction(Action):
 			output_filename = self.inputs["output"].format(f=name, e=ext)
 			
 			# Require input/output to be different
-			if os.path.normcase(os.path.normpath(input_filename)) == os.path.normcase(os.path.normpath(output_filename)): raise Exception("Input and output files cannot be the same.")
+			if os.path.normcase(os.path.normpath(input_filename)) == os.path.normcase(os.path.normpath(output_filename)): raise ValueError("Input and output files cannot be the same.")
 			
 			# Require each input to have its own output
-			if (len(self.inputs["input"]) > 1) and (self.inputs["output"] == output_filename): raise Exception("Each file must have its own output. Use {f} and {e}.")
+			if (len(self.inputs["input"]) > 1) and (self.inputs["output"] == output_filename): raise ValueError("Each file must have its own output. Use {f} and {e}.")
 			
 			# Analyze the input file
 			fields = []
@@ -643,7 +643,7 @@ class AnalyzeAction(Action):
 					parts = [table_name, ",\n".join(columns), escape(os.path.abspath(input_filename)), table_name, escape(self.inputs["delim"]), escape(self.inputs["enclose"]), escape(linesep or os.linesep), " IGNORE 1 LINES" if self.inputs["headers"] else ""]
 					results = "CREATE TABLE {}(\n{}\n);\n\nLOAD DATA INFILE '{}' IGNORE INTO TABLE {} FIELDS TERMINATED BY '{}' OPTIONALLY ENCLOSED BY '{}' LINES TERMINATED BY '{}'{};\n".format(*parts)
 				else:
-					raise Exception("Unknown action: {}".format(self.inputs["action"]))
+					raise ValueError("Unknown action: {}".format(self.inputs["action"]))
 			else:
 				results = "No data found."
 			
@@ -705,7 +705,7 @@ class BasicAction(Action):
 								if isinstance(self.inputs["column"], int): columns.append(self.inputs["column"])
 								for c in columns:
 									if c > len(record):
-										raise Exception("Column #{} does not exist on line {} of '{}'".format(c+1, j+1, input_filename))
+										raise ValueError("Column #{} does not exist on line {} of '{}'".format(c+1, j+1, input_filename))
 							
 							# Process the record
 							record_changed = False
@@ -733,7 +733,7 @@ class BasicAction(Action):
 								if not headers: record[self.inputs["column"]] = record[self.inputs["column"]].replace(self.inputs["find"], self.inputs["replace"])
 								record_changed = True
 							else:
-								raise Exception("Unknown action: {}".format(self.inputs["action"]))
+								raise ValueError("Unknown action: {}".format(self.inputs["action"]))
 							
 							# Update the line if needed
 							if record_changed: line = self.unparse_data(record, self.inputs["delim"], self.inputs["enclose"], self.inputs["escape"])
@@ -812,7 +812,7 @@ class FixedAction(Action):
 								record = self.parse_fixed(line, fixed_map, fixed_length, j)
 								f_out.write(self.unparse_data(record, self.inputs["delim"], self.inputs["enclose"], self.inputs["escape"]) + "\n")
 							else:
-								raise Exception("Unknown action: {}".format(self.inputs["action"]))
+								raise ValueError("Unknown action: {}".format(self.inputs["action"]))
 							
 							if not headers:
 								j += 1
@@ -834,7 +834,7 @@ class FixedAction(Action):
 	def parse_fixed(self, line, fixed_map, fixed_length, i):
 		"""Parse a fixed-length string into a list and return the result."""
 		
-		if len(line) != fixed_length: raise Exception("Line #{} is not the required {} characters long. It is {} characters long.".format(i+1, fixed_length, len(line)))
+		if len(line) != fixed_length: raise ValueError("Line #{} is not the required {} characters long. It is {} characters long.".format(i+1, fixed_length, len(line)))
 		
 		record = []
 		position = 0
@@ -889,7 +889,7 @@ class SplitAction(Action):
 						# Column error checking
 						c = self.inputs["column"]
 						if isinstance(c, int) and (c > len(record)):
-							raise Exception("Column #{} does not exist on line {} of '{}'".format(c+1, j+1, input_filename))
+							raise ValueError("Column #{} does not exist on line {} of '{}'".format(c+1, j+1, input_filename))
 					
 					# Save the header
 					if headers and (j == 0): header_line = line
@@ -907,7 +907,7 @@ class SplitAction(Action):
 							if tmp == "": tmp = "BLANK"
 							output_filename_record = dirname + name + "-" + tmp + ext
 						else:
-							raise Exception("Unknown action: {}".format(self.inputs["action"]))
+							raise ValueError("Unknown action: {}".format(self.inputs["action"]))
 						
 						# Open the output file if needed
 						if (output_filename_current is None) or (output_filename_current != output_filename_record):
