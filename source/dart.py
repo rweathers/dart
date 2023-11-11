@@ -576,7 +576,7 @@ class AnalyzeAction(Action):
 						table_name = re.sub("[^A-Za-z0-9_]+", "", table_name)
 					
 					# Integer storage bits
-					integer_storage_bits = {"TINYINT":8, "SMALLINT":16, "MEDIUMINT":24, "INT":32, "BITINT":64}
+					integer_storage_bits = {"TINYINT":8, "SMALLINT":16, "MEDIUMINT":24, "INT":32, "BIGINT":64}
 					
 					# Create column definitions
 					columns = []
