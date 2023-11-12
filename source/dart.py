@@ -23,6 +23,7 @@
 # Version: 1.0.0 (2021.10.04)
 #############################################################################################################################
 
+import dateparser
 import os
 import re
 import shutil
@@ -667,7 +668,9 @@ class BasicAction(Action):
 		
 		total_bytes = 0
 		for filename in self.inputs["input"]: total_bytes += 0 if filename == "STDIN" else os.path.getsize(filename)
-
+		
+		currency_symbols = ["$", "¢", "$b", "$U", "£", "¥", "฿", "₡", "₦", "₩", "₪", "₫", "€", "₭", "₮", "₱", "₴", "₹", "₺", "₼", "₽", "₨", "B/.", "Br", "Bs", "BZ$", "C$", "CHF", "Ft", "ƒ", "Gs", "J$", "Kč", "KM", "kn", "kr", "L", "lei", "Lek", "MT", "NT$", "P", "Q", "R", "R$", "RD$", "RM", "Rp", "S", "S/.", "TT$", "Z$", "zł", "ден", "Дин.", "лв"]
+		
 		# Loop over input files
 		b = i = f = 0
 		started = time.time()
@@ -731,6 +734,48 @@ class BasicAction(Action):
 								record_changed = True
 							elif self.inputs["action"] == "replace-value":
 								if not headers: record[self.inputs["column"]] = record[self.inputs["column"]].replace(self.inputs["find"], self.inputs["replace"])
+								record_changed = True
+								
+							elif self.inputs["action"] == "sql-prepare":
+								if not headers:
+									j = 0
+									while j < len(record):
+										val = record[j]
+										if val == "":
+											val = "\\N"
+										elif re.search(r"\d+", val):
+											num = val
+											
+											# Remove currency symbols and number formatting
+											for c in currency_symbols: num = num.replace(c, "")
+											num = num.replace("%", "")
+											num = num.replace(",", "")
+											num = num.replace(" ", "")
+											
+											# Convert negative notation from (###) to -###
+											if (num[0] == "(") and (num[-1] == ")"): num = "-" + num[1:-1]
+											
+											# Attempt to parse as a number
+											try:
+												val = int(num)
+											except ValueError:
+												try:
+													val = float(num)
+												except ValueError:
+													# Attempt to parse as a date or time
+													dt = dateparser.parse(val, settings={'STRICT_PARSING': True})
+													if dt is not None:
+														if (dt.hour == 0) and (dt.minute == 0) and (dt.second == 0):
+															val = dt.strftime("%Y-%m-%d")
+														else:
+															val = dt.strftime("%Y-%m-%d %H:%M:%S")
+													elif re.search(r"^\d{1,2}:\d{2}(:\d{2})?$", val) or re.search(r"^\d{1,2}(:\d{2})?(:\d{2})? ?(AM|PM)$", val, re.IGNORECASE):
+														dt = dateparser.parse(val, settings={'STRICT_PARSING': False})
+														if dt is not None: val = dt.strftime("%H:%M:%S")
+										
+										if record[j] != val: record[j] = val
+										j+=1
+										
 								record_changed = True
 							else:
 								raise ValueError("Unknown action: {}".format(self.inputs["action"]))
@@ -1081,6 +1126,10 @@ class CLI(BaseCLI):
 		print("    dart -a sql-import -i a.csv -o b.sql --headers --lines 1000")
 		print("")
 		
+		print("  sql-prepare - standardize date/number formatting for SQL LOAD DATA statements")
+		print("    dart -a sql-prepare -i a.csv -o b.csv --headers")
+		print("")
+		
 	def get_action(self, inputs):
 		"""Return the BaseAction subclass to use."""	
 		
@@ -1132,6 +1181,7 @@ class GUI(BaseGUI):
  \u2022 Split Lines - split one file into many based on number of lines
  \u2022 Split Value - split one file into many based on a column's value
  \u2022 SQL Import - create SQL CREATE TABLE and LOAD DATA statements
+ \u2022 SQL Prepare - standardize date/number formatting for SQL LOAD DATA statements
 
 """, "normal")
 		
@@ -1184,6 +1234,7 @@ class GUI(BaseGUI):
 			"Repair"         :["action", "input", "input-browse", "output", "output-browse", "delim", "enclose", "escape", "encoding", "headers", "submit"],
 			"Replace Pattern":["action", "input", "input-browse", "output", "output-browse", "delim", "enclose", "escape", "encoding", "headers", "submit", "column", "find", "replace"],
 			"Replace Value"  :["action", "input", "input-browse", "output", "output-browse", "delim", "enclose", "escape", "encoding", "headers", "submit", "column", "find", "replace"],
+			"SQL Prepare"    :["action", "input", "input-browse", "output", "output-browse", "delim", "enclose", "escape", "encoding", "headers", "submit"],
 			
 			"Delim to Fixed":["action", "input", "input-browse", "output", "output-browse", "delim", "enclose", "escape", "encoding", "headers", "submit", "definition", "definition-browse"],
 			"Fixed to Delim":["action", "input", "input-browse", "output", "output-browse", "delim", "enclose", "escape", "encoding", "headers", "submit", "definition", "definition-browse"],
@@ -1204,7 +1255,7 @@ class GUI(BaseGUI):
 	def create_widgets(self):	
 		"""Create the widgets."""
 		
-		actions = ("", "Analyze", "Combine", "Delim to Fixed", "Filter", "Fixed to Delim", "Head", "Remove Columns", "Repair", "Replace Pattern", "Replace Value", "Split Lines", "Split Value", "SQL Import")
+		actions = ("", "Analyze", "Combine", "Delim to Fixed", "Filter", "Fixed to Delim", "Head", "Remove Columns", "Repair", "Replace Pattern", "Replace Value", "Split Lines", "Split Value", "SQL Import", "SQL Prepare")
 		self.create_combobox(self, "action", "Action", actions)
 		self.widgets["action"].bind("<<ComboboxSelected>>", self.enable_widgets)
 		

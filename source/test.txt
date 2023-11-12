@@ -10,6 +10,7 @@
 ./dart.py --action repair          --input test-files/input-repair.csv          --output test-files/output-repair.csv          --headers
 ./dart.py --action replace-value   --input test-files/input-replace-value.csv   --output test-files/output-replace-value.csv   --headers --column 5 --find "\N" --replace 0
 ./dart.py --action replace-pattern --input test-files/input-replace-pattern.csv --output test-files/output-replace-pattern.csv --headers --column 11 --find '(\d{2})/(\d{2})/(\d{4})' --replace '\3-\1-\2'
+./dart.py --action sql-prepare     --input test-files/input-sql-prepare.csv     --output test-files/output-sql-prepare.csv     --headers
 
 ./dart.py --action delim-to-fixed --input test-files/input-delim-to-fixed.csv --output test-files/output-delim-to-fixed.txt --definition test-files/fixed.def
 ./dart.py --action fixed-to-delim --input test-files/input-fixed-to-delim.txt --output test-files/output-fixed-to-delim.csv --definition test-files/fixed.def

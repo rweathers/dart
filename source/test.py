@@ -512,6 +512,37 @@ def test_sql_import(inputs):
 		
 		test_helper(", ".join(description), AnalyzeAction, inputs, contents_input, contents_output, message)
 
+def test_sql_prepare(inputs):
+	"""Test SQL prepare action."""
+	
+	inputs.update({
+		"action" :"sql-prepare",
+		"input"  :["{tmp}/test-input-file1.csv", "{tmp}/test-input-file2.csv", "{tmp}/test-input-file3.csv"]
+	})
+	
+	# Test with and without headers
+	test_cases_1 = {True:"headers", False:"no headers"}
+	for test_val_1, test_desc_1 in test_cases_1.items():
+		inputs["headers"] = test_val_1
+		
+		# Test single, multiple and in-place outputs
+		test_cases_2 = {"test-output.csv":"single", "{{f}}-out{{e}}":"multiple", "{{f}}{{e}}":"in-place"}
+		for test_val_2, test_desc_2 in test_cases_2.items():
+			inputs["output"] = "{tmp}/" + test_val_2
+			
+			description = [inputs["action"], test_desc_1, test_desc_2]
+			
+			contents_input = 'foo,,"1,000$","($1,000.00)",01-01-23,Jan 01 2023,8:30 pm,bar1\n'
+			contents_output = '"foo","\\N","1000","-1000.0","2023-01-01","2023-01-01","20:30:00","bar1"\n'
+			if test_desc_2 == "single": contents_output = contents_output * len(inputs["input"])
+			if inputs["headers"]:
+				contents_input = "field1,field2,field3,field4,field5,field6,field7,field8\n" + contents_input
+				contents_output = '"field1","field2","field3","field4","field5","field6","field7","field8"\n' + contents_output
+			
+			message = "Processed 3 records sucessfully"
+			
+			test_helper(", ".join(description), BasicAction, inputs, contents_input, contents_output, message)
+
 def test_helper(description, action, inputs, contents_input, contents_output, expected_message):
 	"""Test helper."""
 	
@@ -639,6 +670,8 @@ def main():
 		
 		test_analyze(conf.conf.copy())
 		test_sql_import(conf.conf.copy())
+		
+		test_sql_prepare(conf.conf.copy())
 		
 		print("")
 	except Exception as e:
