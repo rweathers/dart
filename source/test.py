@@ -6,7 +6,7 @@
 # dart
 # Test script
 #
-# Copyright © 2017, 2018, 2019 Ryan Weathers, All Rights Reserved.
+# Copyright © 2017, 2018, 2019, 2020, 2021, 2023 Ryan Weathers, All Rights Reserved.
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

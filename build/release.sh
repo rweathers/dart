@@ -1,6 +1,6 @@
 #!/bin/sh -e
 
-version="1.0.0"
+version="1.1.0"
 
 cd ../release
 

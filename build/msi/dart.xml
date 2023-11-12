@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-	<Product Id="*" UpgradeCode="bbcf90bf-f963-41bf-b64a-174d03b1d708" Name="dart" Version="1.0.0" Manufacturer="Ryan Weathers" Language="1033">
+	<Product Id="*" UpgradeCode="22a48faa-8d07-411d-8cfe-542e55923ef9" Name="dart" Version="1.1.0" Manufacturer="Ryan Weathers" Language="1033">
 		<Package InstallerVersion="200" Compressed="yes" Comments="Windows Installer Package" Platform="x64"/>
 		<Media Id="1" Cabinet="product.cab" EmbedCab="yes"/>
 		<UIRef Id="WixUI_Minimal"/>

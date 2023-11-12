@@ -34,3 +34,8 @@ Most recent folder is retained for successive file/folder dialogs.
 ## 1.0.0 (2021.10.04)
 
 Stable release.
+
+## 1.1.0 (2023.11.12)
+
+Added SQL Prepare action.  
+Fixed BIGINT typo.
